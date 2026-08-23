@@ -293,14 +293,23 @@ function GameDetailScreen({ game, onCheckout }) {
                     game.currency,
                     " \u0448\u0443\u0443\u0434 \u0446\u044D\u043D\u044D\u0433\u043B\u044D\u043B\u0442"))),
         React.createElement(SectionLabel, { step: "1", text: "\u0422\u043E\u0433\u043B\u043E\u0433\u0447\u0438\u0439\u043D ID \u043E\u0440\u0443\u0443\u043B\u0430\u0445" }),
-        React.createElement("div", { style: { display: "flex", flexWrap: "nowrap", gap: 10, marginBottom: 12 } },
+        React.createElement("div", { style: { display: "flex", flexWrap: "nowrap", gap: 10, marginBottom: 12, alignItems: "flex-end" } },
             React.createElement("div", { style: { flex: "1 1 0", minWidth: 0 } },
                 React.createElement("label", { style: fieldLabelStyle }, "ID \u043E\u0440\u0443\u0443\u043B\u0430\u0445"),
                 React.createElement("input", { value: playerId, onChange: handleIdChange(setPlayerId), placeholder: "\u0416\u0438\u0448\u044D\u044D: 123456789", style: inputStyle })),
             game.hasZoneId && (React.createElement("div", { style: { flex: "1 1 0", minWidth: 0 } },
                 React.createElement("label", { style: fieldLabelStyle }, "Zone ID \u043E\u0440\u0443\u0443\u043B\u0430\u0445"),
-                React.createElement("input", { value: serverId, onChange: handleIdChange(setServerId), placeholder: "\u0416\u0438\u0448\u044D\u044D: 2001", style: inputStyle })))),
-        React.createElement("button", { onClick: handleCheck, disabled: !idReady || checking, style: {
+                React.createElement("input", { value: serverId, onChange: handleIdChange(setServerId), placeholder: "\u0416\u0438\u0448\u044D\u044D: 2001", style: inputStyle }))),
+            !game.hasZoneId && (React.createElement("button", { onClick: handleCheck, disabled: !idReady || checking, style: {
+                    padding: "0 22px", height: 46, borderRadius: 12, flexShrink: 0,
+                    border: `1px solid ${idReady ? "rgba(198,255,61,0.4)" : "rgba(255,255,255,0.1)"}`,
+                    background: idReady ? "rgba(198,255,61,0.1)" : "rgba(255,255,255,0.04)",
+                    color: idReady ? "#C6FF3D" : "#6C7189",
+                    fontWeight: 700, fontSize: 13.5, cursor: idReady && !checking ? "pointer" : "not-allowed",
+                    fontFamily: "'Rajdhani', sans-serif", letterSpacing: 0.3, whiteSpace: "nowrap",
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 6
+                } }, checking ? "..." : "\u0428\u0430\u043B\u0433\u0430\u0445"))),
+        game.hasZoneId && (React.createElement("button", { onClick: handleCheck, disabled: !idReady || checking, style: {
                 width: "100%", padding: "11px 0", borderRadius: 12, marginBottom: 10,
                 border: `1px solid ${idReady ? "rgba(198,255,61,0.4)" : "rgba(255,255,255,0.1)"}`,
                 background: idReady ? "rgba(198,255,61,0.1)" : "rgba(255,255,255,0.04)",
@@ -308,7 +317,7 @@ function GameDetailScreen({ game, onCheckout }) {
                 fontWeight: 700, fontSize: 13.5, cursor: idReady && !checking ? "pointer" : "not-allowed",
                 fontFamily: "'Rajdhani', sans-serif", letterSpacing: 0.3,
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 6
-            } }, checking ? "Шалгаж байна..." : "ID шалгах"),
+            } }, checking ? "Шалгаж байна..." : "ID шалгах")),
         checkedName && (React.createElement("div", { style: {
                 display: "flex", alignItems: "center", gap: 10, background: "rgba(198,255,61,0.08)",
                 border: "1px solid rgba(198,255,61,0.3)", borderRadius: 12, padding: "10px 14px", marginBottom: 24
@@ -613,7 +622,7 @@ function TopUpZone() {
         step === "game" && game && (React.createElement(GameDetailScreen, { game: game, onCheckout: (o) => { setOrder(o); setStep("checkout"); } })),
         step === "checkout" && order && (React.createElement(CheckoutScreen, { order: order, game: game, onConfirm: () => { }, onGoHome: handleGoHome })),
         showAuth && (React.createElement(AuthModal, { onClose: () => setShowAuth(false), onSuccess: handleAuthSuccess })),
-        showPromo && (React.createElement(PromoModal, { onClose: () => setShowPromo(false), imageUrl: "https://www.gameshop.mn/weekly.png" }))));
+        showPromo && (React.createElement(PromoModal, { onClose: () => setShowPromo(false), imageUrl: "https://4kwallpapers.com/images/walls/thumbs_2t/21640.jpg" }))));
 }
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(React.createElement(TopUpZone, null));
