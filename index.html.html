@@ -91,13 +91,44 @@ const TrendingUp = makeIcon(<>
 
 // ---------- Mock data ----------
 const GAMES = [
-  { id: "pubg", name: "PUBG Mobile", currency: "UC", icon: "🔫", image: "https://upload.wikimedia.org/wikipedia/en/4/44/PlayerUnknown%27s_Battlegrounds_Mobile.webp", color: "#C6FF3D", banner: "linear-gradient(135deg,#0b1a0b,#1e3a14 60%,#C6FF3D)", popular: true },
-  { id: "mlbb", name: "Mobile Legends", currency: "Diamond", icon: "⚔️", image: "https://static.wikia.nocookie.net/mobile-legends/images/f/fb/MLBB_icon.png/revision/latest?cb=20241013132437", color: "#7C4DFF", banner: "linear-gradient(135deg,#150b2e,#3a1e6b 60%,#7C4DFF)", popular: true },
-  { id: "standoff2", name: "Standoff 2", currency: "Gold", icon: "🔥", image: "https://downloadr2.apkmirror.com/wp-content/uploads/2025/10/55/6900b17c046c1_com.axlebolt.standoff2.png", color: "#FFD23D", banner: "linear-gradient(135deg,#1a170b,#4a3f14 60%,#FFD23D)", popular: true },
-  { id: "roblox", name: "Roblox", currency: "Robux", icon: "🧱", image: "https://images.rbxcdn.com/635b5b0aa3a3a67f7a1e6e8d3b6a5f3b.png", color: "#FF3D8B", banner: "linear-gradient(135deg,#1e0b15,#4a1434 60%,#FF3D8B)", popular: true },
+  { id: "pubg", name: "PUBG Mobile", currency: "UC", icon: "🔫", image: "https://upload.wikimedia.org/wikipedia/en/4/44/PlayerUnknown%27s_Battlegrounds_Mobile.webp", color: "#C6FF3D", banner: "linear-gradient(135deg,#0b1a0b,#1e3a14 60%,#C6FF3D)", popular: true, hasZoneId: false },
+  { id: "mlbb", name: "Mobile Legends", currency: "Diamond", icon: "⚔️", image: "https://static.wikia.nocookie.net/mobile-legends/images/f/fb/MLBB_icon.png/revision/latest?cb=20241013132437", color: "#7C4DFF", banner: "linear-gradient(135deg,#150b2e,#3a1e6b 60%,#7C4DFF)", popular: true, hasZoneId: true },
+  { id: "standoff2", name: "Standoff 2", currency: "Gold", icon: "🔥", image: "https://downloadr2.apkmirror.com/wp-content/uploads/2025/10/55/6900b17c046c1_com.axlebolt.standoff2.png", color: "#FFD23D", banner: "linear-gradient(135deg,#1a170b,#4a3f14 60%,#FFD23D)", popular: true, hasZoneId: false },
+  { id: "roblox", name: "Roblox", currency: "Robux", icon: "🧱", image: "https://images.rbxcdn.com/635b5b0aa3a3a67f7a1e6e8d3b6a5f3b.png", color: "#FF3D8B", banner: "linear-gradient(135deg,#1e0b15,#4a1434 60%,#FF3D8B)", popular: true, hasZoneId: false },
 ];
 
-const PACKAGES = {};
+const CURRENCY_ICONS = {
+  pubg: "https://www.gameshop.mn/uc.png",
+  mlbb: "https://www.gameshop.mn/weekly.png",
+};
+
+const CURRENCY_ICON_SIZES = {
+  pubg: 15,
+  mlbb: 20,
+};
+
+const PACKAGES = {
+  pubg: [
+    { id: 1, amount: 60, bonus: 0, price: 5000 },
+    { id: 2, amount: 325, bonus: 0, price: 18000, popular: true },
+    { id: 3, amount: 660, bonus: 0, price: 35500 },
+    { id: 4, amount: 1800, bonus: 0, price: 87000 },
+    { id: 5, amount: 3850, bonus: 0, price: 170000 },
+    { id: 6, amount: 8100, bonus: 0, price: 340000, best: true },
+  ],
+  mlbb: [
+    { id: 1, amount: 20, bonus: 0, price: 2500 },
+    { id: 2, amount: 40, bonus: 0, price: 4000 },
+    { id: 3, amount: 60, bonus: 0, price: 6000 },
+    { id: 4, amount: 101, bonus: 0, price: 8000 },
+    { id: 5, amount: 206, bonus: 0, price: 15000, popular: true },
+    { id: 6, amount: 412, bonus: 0, price: 28500 },
+    { id: 7, amount: 1049, bonus: 0, price: 65000 },
+    { id: 8, amount: 2132, bonus: 0, price: 135000 },
+    { id: 9, amount: 4299, bonus: 0, price: 260000 },
+    { id: 10, amount: 6502, bonus: 0, price: 375000, best: true },
+  ],
+};
 const defaultPackages = (curr) => [
   { id: 1, amount: 60, bonus: 0, price: 5000 },
   { id: 2, amount: 325, bonus: 25, price: 25000, popular: true },
@@ -297,7 +328,28 @@ function GameDetailScreen({ game, onCheckout }) {
   const [serverId, setServerId] = useState("");
   const [selectedPkg, setSelectedPkg] = useState(null);
   const [imgFailed, setImgFailed] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const [checkedName, setCheckedName] = useState(null);
   const packages = PACKAGES[game.id] || defaultPackages(game.currency);
+
+  const idReady = playerId.trim() && (!game.hasZoneId || serverId.trim());
+
+  const handleIdChange = (setter) => (e) => {
+    setter(e.target.value);
+    setCheckedName(null);
+  };
+
+  const handleCheck = () => {
+    if (!idReady || checking) return;
+    setChecking(true);
+    setCheckedName(null);
+    setTimeout(() => {
+      setChecking(false);
+      setCheckedName(`Player_${playerId.trim().slice(-5)}`);
+    }, 800);
+  };
+
+  const canBuy = selectedPkg && idReady && checkedName;
 
   return (
     <div style={{ padding: "20px 20px 100px" }}>
@@ -326,26 +378,60 @@ function GameDetailScreen({ game, onCheckout }) {
 
       {/* Player ID */}
       <SectionLabel step="1" text="Тоглогчийн ID оруулах" />
-      <div style={{ display: "flex", flexWrap: "nowrap", gap: 10, marginBottom: 24 }}>
+      <div style={{ display: "flex", flexWrap: "nowrap", gap: 10, marginBottom: 12 }}>
         <div style={{ flex: "1 1 0", minWidth: 0 }}>
           <label style={fieldLabelStyle}>ID оруулах</label>
           <input
             value={playerId}
-            onChange={(e) => setPlayerId(e.target.value)}
+            onChange={handleIdChange(setPlayerId)}
             placeholder="Жишээ: 123456789"
             style={inputStyle}
           />
         </div>
-        <div style={{ flex: "1 1 0", minWidth: 0 }}>
-          <label style={fieldLabelStyle}>Zone ID оруулах</label>
-          <input
-            value={serverId}
-            onChange={(e) => setServerId(e.target.value)}
-            placeholder="Жишээ: 2001"
-            style={inputStyle}
-          />
-        </div>
+        {game.hasZoneId && (
+          <div style={{ flex: "1 1 0", minWidth: 0 }}>
+            <label style={fieldLabelStyle}>Zone ID оруулах</label>
+            <input
+              value={serverId}
+              onChange={handleIdChange(setServerId)}
+              placeholder="Жишээ: 2001"
+              style={inputStyle}
+            />
+          </div>
+        )}
       </div>
+
+      <button
+        onClick={handleCheck}
+        disabled={!idReady || checking}
+        style={{
+          width: "100%", padding: "11px 0", borderRadius: 12, marginBottom: 10,
+          border: `1px solid ${idReady ? "rgba(198,255,61,0.4)" : "rgba(255,255,255,0.1)"}`,
+          background: idReady ? "rgba(198,255,61,0.1)" : "rgba(255,255,255,0.04)",
+          color: idReady ? "#C6FF3D" : "#6C7189",
+          fontWeight: 700, fontSize: 13.5, cursor: idReady && !checking ? "pointer" : "not-allowed",
+          fontFamily: "'Rajdhani', sans-serif", letterSpacing: 0.3,
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 6
+        }}
+      >
+        {checking ? "Шалгаж байна..." : "ID шалгах"}
+      </button>
+
+      {checkedName && (
+        <div style={{
+          display: "flex", alignItems: "center", gap: 10, background: "rgba(198,255,61,0.08)",
+          border: "1px solid rgba(198,255,61,0.3)", borderRadius: 12, padding: "10px 14px", marginBottom: 24
+        }}>
+          <div style={{
+            width: 22, height: 22, borderRadius: "50%", background: "#C6FF3D",
+            display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+          }}>
+            <Check size={13} color="#0B0E1A" strokeWidth={3} />
+          </div>
+          <span style={{ fontSize: 13, color: "#EDEFF7" }}>Тоглогч олдлоо: <b>{checkedName}</b></span>
+        </div>
+      )}
+      {!checkedName && <div style={{ marginBottom: 14 }} />}
 
       {/* Packages */}
       <SectionLabel step="2" text={`${game.currency} багц сонгох`} />
@@ -356,6 +442,8 @@ function GameDetailScreen({ game, onCheckout }) {
             pkg={p}
             currency={game.currency}
             color={game.color}
+            iconUrl={CURRENCY_ICONS[game.id]}
+            iconSize={CURRENCY_ICON_SIZES[game.id]}
             selected={selectedPkg?.id === p.id}
             onClick={() => setSelectedPkg(p)}
           />
@@ -376,13 +464,13 @@ function GameDetailScreen({ game, onCheckout }) {
           </div>
         </div>
         <button
-          disabled={!selectedPkg || !playerId}
+          disabled={!canBuy}
           onClick={() => onCheckout({ playerId, serverId, pkg: selectedPkg })}
           style={{
             padding: "13px 32px", borderRadius: 14, border: "none",
-            background: selectedPkg && playerId ? "linear-gradient(90deg,#C6FF3D,#8FE62E)" : "rgba(255,255,255,0.08)",
-            color: selectedPkg && playerId ? "#0B0E1A" : "#6C7189",
-            fontWeight: 800, fontSize: 15, cursor: selectedPkg && playerId ? "pointer" : "not-allowed",
+            background: canBuy ? "linear-gradient(90deg,#C6FF3D,#8FE62E)" : "rgba(255,255,255,0.08)",
+            color: canBuy ? "#0B0E1A" : "#6C7189",
+            fontWeight: 800, fontSize: 15, cursor: canBuy ? "pointer" : "not-allowed",
             fontFamily: "'Rajdhani', sans-serif", letterSpacing: 0.5,
             display: "flex", alignItems: "center", gap: 6
           }}
@@ -422,7 +510,8 @@ const fieldLabelStyle = {
   whiteSpace: "nowrap", overflow: "visible"
 };
 
-function PackageCard({ pkg, currency, color, selected, onClick }) {
+function PackageCard({ pkg, currency, color, iconUrl, iconSize, selected, onClick }) {
+  const size = iconSize || 15;
   return (
     <div
       onClick={onClick}
@@ -444,7 +533,15 @@ function PackageCard({ pkg, currency, color, selected, onClick }) {
         </span>
       )}
       <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-        <Gem size={15} color={color} />
+        {iconUrl ? (
+          <img
+            src={iconUrl}
+            alt=""
+            style={{ width: size, height: size, objectFit: "contain", display: "block", background: "transparent" }}
+          />
+        ) : (
+          <Gem size={15} color={color} />
+        )}
         <span style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 700, fontSize: 17, color: "#EDEFF7" }}>
           {pkg.amount.toLocaleString()}
         </span>
