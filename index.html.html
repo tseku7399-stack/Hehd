@@ -20,6 +20,25 @@
   }
   input::placeholder { color: #6C7189; }
   button { font-family: inherit; }
+
+  .app-shell {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    min-height: 700px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  @media (max-width: 640px) {
+    body { padding: 0; align-items: stretch; }
+    .app-shell {
+      max-width: 100%;
+      min-height: 100vh;
+      border-radius: 0;
+      box-shadow: none;
+    }
+  }
 </style>
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -87,8 +106,8 @@ const PACKAGES = {
         { id: 2, amount: 325, bonus: 0, price: 18000, popular: true },
         { id: 3, amount: 660, bonus: 0, price: 35500 },
         { id: 4, amount: 1800, bonus: 0, price: 87000 },
-        { id: 5, amount: 3850, bonus: 0, price: 171000 },
-        { id: 6, amount: 8100, bonus: 0, price: 342000, best: true },
+        { id: 5, amount: 3850, bonus: 0, price: 170000 },
+        { id: 6, amount: 8100, bonus: 0, price: 340000, best: true },
     ],
     mlbb: [
         { id: 1, amount: 20, bonus: 0, price: 2500 },
@@ -526,6 +545,32 @@ function AuthModal({ onClose, onSuccess }) {
                     " ",
                     React.createElement(ChevronRight, { size: 18 }))))));
 }
+// ---------- Promo popup ----------
+function PromoModal({ onClose, imageUrl, href }) {
+    const content = (React.createElement("img", {
+        src: imageUrl, alt: "Урамшуулал",
+        style: { width: "100%", display: "block", borderRadius: 18, boxShadow: "0 20px 60px rgba(0,0,0,0.6)" }
+    }));
+    return (React.createElement("div", {
+        onClick: onClose,
+        style: {
+            position: "fixed", inset: 0, zIndex: 60, background: "rgba(5,6,12,0.78)",
+            backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center",
+            padding: 24
+        }
+    },
+        React.createElement("div", { onClick: (e) => e.stopPropagation(), style: { position: "relative", maxWidth: 420, width: "100%" } },
+            React.createElement("button", {
+                onClick: onClose,
+                style: {
+                    position: "absolute", top: -14, right: -14, background: "#12162a",
+                    border: "1px solid rgba(255,255,255,0.15)", borderRadius: "50%",
+                    width: 32, height: 32, color: "#EDEFF7", cursor: "pointer", fontSize: 16,
+                    display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1
+                }
+            }, "\u00D7"),
+            href ? React.createElement("a", { href: href, target: "_blank", rel: "noopener noreferrer" }, content) : content)));
+}
 // ---------- App shell ----------
 function TopUpZone() {
     const [step, setStep] = useState("home");
@@ -533,6 +578,7 @@ function TopUpZone() {
     const [order, setOrder] = useState(null);
     const [user, setUser] = useState(null);
     const [showAuth, setShowAuth] = useState(false);
+    const [showPromo, setShowPromo] = useState(true);
     const handleBack = () => {
         if (step === "checkout")
             setStep("game");
@@ -558,16 +604,16 @@ function TopUpZone() {
         setUser(name);
         setShowAuth(false);
     };
-    return (React.createElement("div", { style: {
-            width: "100%", maxWidth: 900, margin: "0 auto", minHeight: 700,
-            background: "#0B0E1A", fontFamily: "'Inter', sans-serif", position: "relative",
-            borderRadius: 20, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.5)"
-        } },
+    return (React.createElement("div", {
+            className: "app-shell",
+            style: { background: "#0B0E1A", fontFamily: "'Inter', sans-serif", position: "relative" }
+        },
         React.createElement(Header, { step: step, onBack: handleBack, user: user, onLoginClick: handleLoginClick }),
         step === "home" && (React.createElement(HomeScreen, { onSelectGame: (g) => { setGame(g); setStep("game"); } })),
         step === "game" && game && (React.createElement(GameDetailScreen, { game: game, onCheckout: (o) => { setOrder(o); setStep("checkout"); } })),
         step === "checkout" && order && (React.createElement(CheckoutScreen, { order: order, game: game, onConfirm: () => { }, onGoHome: handleGoHome })),
-        showAuth && (React.createElement(AuthModal, { onClose: () => setShowAuth(false), onSuccess: handleAuthSuccess }))));
+        showAuth && (React.createElement(AuthModal, { onClose: () => setShowAuth(false), onSuccess: handleAuthSuccess })),
+        showPromo && (React.createElement(PromoModal, { onClose: () => setShowPromo(false), imageUrl: "https://www.gameshop.mn/weekly.png" }))));
 }
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(React.createElement(TopUpZone, null));
