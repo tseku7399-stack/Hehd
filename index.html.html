@@ -18,6 +18,12 @@
   }
   input::placeholder { color: #6C7189; }
   button { font-family: inherit; }
+
+  /* Утсан дэлгэцэд сайт бүтэн дүүрэн харагдана: хүрээ, sайдгайн зай алга болно */
+  @media (max-width: 680px) {
+    body { padding: 0; align-items: stretch; }
+    .app-shell { border-radius: 0 !important; box-shadow: none !important; min-height: 100vh !important; }
+  }
 </style>
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -848,7 +854,7 @@ function TopUpZone() {
   };
 
   return (
-    <div style={{
+    <div className="app-shell" style={{
       width: "100%", maxWidth: 900, margin: "0 auto", minHeight: 700,
       background: "#0B0E1A", fontFamily: "'Inter', sans-serif", position: "relative",
       borderRadius: 20, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.5)"
