@@ -360,32 +360,43 @@ function GameDetailScreen({ game, onCheckout }) {
   return (
     <div style={{ padding: "20px 20px 100px" }}>
       <div style={{
-        borderRadius: 18, overflow: "hidden", marginBottom: 22, background: game.banner,
-        height: 110, display: "flex", alignItems: "center", padding: "0 22px", position: "relative"
+        borderRadius: 18, overflow: "hidden", marginBottom: 22, position: "relative", height: 150
       }}>
-        {game.image && !imgFailed ? (
+        {/* Дэвсгэр градиент — зураг ачаалагдаагүй үед ч бүх талбайг дүүргэнэ */}
+        <div style={{ position: "absolute", inset: 0, background: game.banner }} />
+        {game.image && !imgFailed && (
           <img
             src={game.image}
             alt={game.name}
             onError={() => setImgFailed(true)}
-            style={{
-              width: 72, height: 72, borderRadius: 16, objectFit: "cover", marginRight: 16,
-              boxShadow: "0 6px 18px rgba(0,0,0,0.4)"
-            }}
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
           />
-        ) : (
-          <div style={{ fontSize: 44, marginRight: 16 }}>{game.icon}</div>
         )}
-        <div>
-          <div style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 700, fontSize: 22, color: "#fff" }}>{game.name}</div>
-          <div style={{ fontSize: 13, color: "rgba(255,255,255,0.85)" }}>{game.currency} шууд цэнэглэлт</div>
+        {(!game.image || imgFailed) && (
+          <div style={{
+            position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: 72, opacity: 0.9
+          }}>
+            {game.icon}
+          </div>
+        )}
+        {/* Текст уншигдахуйц байлгах градиент давхарга */}
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(0,0,0,0.65), rgba(0,0,0,0.05) 65%)" }} />
+        <div style={{
+          position: "relative", zIndex: 1, height: "100%",
+          display: "flex", alignItems: "flex-end", padding: "0 22px 16px"
+        }}>
+          <div>
+            <div style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 700, fontSize: 22, color: "#fff" }}>{game.name}</div>
+            <div style={{ fontSize: 13, color: "rgba(255,255,255,0.85)" }}>{game.currency} шууд цэнэглэлт</div>
+          </div>
         </div>
       </div>
 
       {/* Player ID */}
       <SectionLabel step="1" text="Тоглогчийн ID оруулах" />
-      <div style={{ display: "flex", flexWrap: "nowrap", gap: 10, marginBottom: 12 }}>
-        <div style={{ flex: "1 1 0", minWidth: 0 }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 24, alignItems: "flex-end" }}>
+        <div style={{ flex: "1 1 140px", minWidth: 0 }}>
           <label style={fieldLabelStyle}>ID оруулах</label>
           <input
             value={playerId}
@@ -395,7 +406,7 @@ function GameDetailScreen({ game, onCheckout }) {
           />
         </div>
         {game.hasZoneId && (
-          <div style={{ flex: "1 1 0", minWidth: 0 }}>
+          <div style={{ flex: "1 1 100px", minWidth: 0 }}>
             <label style={fieldLabelStyle}>Zone ID оруулах</label>
             <input
               value={serverId}
@@ -405,23 +416,22 @@ function GameDetailScreen({ game, onCheckout }) {
             />
           </div>
         )}
+        <button
+          onClick={handleCheck}
+          disabled={!idReady || checking}
+          style={{
+            flexShrink: 0, height: 46, padding: "0 18px", borderRadius: 12, whiteSpace: "nowrap",
+            border: `1px solid ${idReady ? "rgba(198,255,61,0.4)" : "rgba(255,255,255,0.1)"}`,
+            background: idReady ? "rgba(198,255,61,0.1)" : "rgba(255,255,255,0.04)",
+            color: idReady ? "#C6FF3D" : "#6C7189",
+            fontWeight: 700, fontSize: 13.5, cursor: idReady && !checking ? "pointer" : "not-allowed",
+            fontFamily: "'Rajdhani', sans-serif", letterSpacing: 0.3,
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 6
+          }}
+        >
+          {checking ? "Шалгаж байна..." : "ID шалгах"}
+        </button>
       </div>
-
-      <button
-        onClick={handleCheck}
-        disabled={!idReady || checking}
-        style={{
-          width: "100%", padding: "11px 0", borderRadius: 12, marginBottom: 10,
-          border: `1px solid ${idReady ? "rgba(198,255,61,0.4)" : "rgba(255,255,255,0.1)"}`,
-          background: idReady ? "rgba(198,255,61,0.1)" : "rgba(255,255,255,0.04)",
-          color: idReady ? "#C6FF3D" : "#6C7189",
-          fontWeight: 700, fontSize: 13.5, cursor: idReady && !checking ? "pointer" : "not-allowed",
-          fontFamily: "'Rajdhani', sans-serif", letterSpacing: 0.3,
-          display: "flex", alignItems: "center", justifyContent: "center", gap: 6
-        }}
-      >
-        {checking ? "Шалгаж байна..." : "ID шалгах"}
-      </button>
 
       {checkedName && (
         <div style={{
