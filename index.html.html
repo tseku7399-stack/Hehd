@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>LootBox</title>
+<title>TopUpZone</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" />
 <style>
   * { box-sizing: border-box; }
@@ -115,7 +115,7 @@ const CURRENCY_ICON_SIZES = {
 
 const PACKAGES = {
   pubg: [
-    { id: 1, amount: 60, bonus: 0, price: 4900 },
+    { id: 1, amount: 60, bonus: 0, price: 5000 },
     { id: 2, amount: 325, bonus: 0, price: 18000, popular: true },
     { id: 3, amount: 660, bonus: 0, price: 35500 },
     { id: 4, amount: 1800, bonus: 0, price: 87000 },
@@ -209,38 +209,71 @@ function HomeScreen({ onSelectGame }) {
 
   return (
     <div style={{ padding: "24px 20px 60px" }}>
-      {/* Hero */}
+      {/* Hero — текстгүй, 16:9 харьцаатай зураг */}
       <div style={{
-        borderRadius: 20, padding: "32px 24px", marginBottom: 28, position: "relative", overflow: "hidden",
-        background: "linear-gradient(135deg,#12162a,#1a1030 60%,#0B0E1A)",
-        border: "1px solid rgba(198,255,61,0.15)"
+        borderRadius: 20, marginBottom: 28, position: "relative", overflow: "hidden",
+        aspectRatio: "16 / 9", border: "1px solid rgba(198,255,61,0.15)"
       }}>
-        <div style={{
-          position: "absolute", top: "-30%", right: "-10%", width: "50%", height: "160%",
-          background: "radial-gradient(circle, rgba(198,255,61,0.15), transparent 70%)"
-        }} />
-        <div style={{
-          position: "absolute", bottom: "-40%", left: "-10%", width: "50%", height: "160%",
-          background: "radial-gradient(circle, rgba(124,77,255,0.2), transparent 70%)"
-        }} />
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <div style={{
-            display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(198,255,61,0.12)",
-            border: "1px solid rgba(198,255,61,0.3)", borderRadius: 20, padding: "5px 12px",
-            fontSize: 12, fontWeight: 700, color: "#C6FF3D", marginBottom: 16
-          }}>
-            <Zap size={12} fill="#C6FF3D" /> Instant цэнэглэлт · 24/7
-          </div>
-          <h1 style={{
-            fontFamily: "'Rajdhani', sans-serif", fontWeight: 700, fontSize: 32, lineHeight: 1.15,
-            color: "#EDEFF7", margin: "0 0 10px"
-          }}>
-            Diamond, UC цэнэглэлт<br /><span style={{ color: "#C6FF3D" }}>1 минутанд</span>
-          </h1>
-          <p style={{ color: "#9BA0B8", fontSize: 14, margin: 0, maxWidth: 380 }}>
-            Тоглоомын ID-гаа оруулаад, багц сонгоод QPay-аар шууд төл. Бэлэн бол дор нь орно.
-          </p>
-        </div>
+        <svg
+          viewBox="0 0 640 360"
+          preserveAspectRatio="xMidYMid slice"
+          style={{ width: "100%", height: "100%", display: "block" }}
+        >
+          <defs>
+            <linearGradient id="heroBg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#12162a" />
+              <stop offset="60%" stopColor="#1a1030" />
+              <stop offset="100%" stopColor="#0B0E1A" />
+            </linearGradient>
+            <radialGradient id="heroGlow1" cx="85%" cy="10%" r="55%">
+              <stop offset="0%" stopColor="#C6FF3D" stopOpacity="0.35" />
+              <stop offset="100%" stopColor="#C6FF3D" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="heroGlow2" cx="5%" cy="95%" r="55%">
+              <stop offset="0%" stopColor="#7C4DFF" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="#7C4DFF" stopOpacity="0" />
+            </radialGradient>
+            <linearGradient id="controllerGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#C6FF3D" />
+              <stop offset="100%" stopColor="#8FE62E" />
+            </linearGradient>
+          </defs>
+          <rect width="640" height="360" fill="url(#heroBg)" />
+          <rect width="640" height="360" fill="url(#heroGlow1)" />
+          <rect width="640" height="360" fill="url(#heroGlow2)" />
+
+          {/* Floating diamond / UC coin motifs */}
+          <g opacity="0.9">
+            <rect x="466" y="70" width="30" height="30" rx="7" transform="rotate(45 481 85)" fill="#7C4DFF" />
+            <circle cx="120" cy="70" r="16" fill="#C6FF3D" opacity="0.85" />
+            <circle cx="150" cy="100" r="9" fill="#7C4DFF" opacity="0.7" />
+            <rect x="540" y="230" width="22" height="22" rx="5" transform="rotate(45 551 241)" fill="#C6FF3D" opacity="0.8" />
+          </g>
+
+          {/* Stylised game controller, centered */}
+          <g transform="translate(320,180)">
+            <path
+              d="M-95,-10 C-95,-42 -68,-52 -40,-52 L40,-52 C68,-52 95,-42 95,-10 C95,20 78,55 55,55 C40,55 34,30 20,30 L-20,30 C-34,30 -40,55 -55,55 C-78,55 -95,20 -95,-10 Z"
+              fill="url(#controllerGrad)"
+            />
+            <circle cx="-52" cy="-14" r="9" fill="#0B0E1A" opacity="0.85" />
+            <rect x="-58" y="-4" width="12" height="28" rx="3" fill="#0B0E1A" opacity="0.85" transform="rotate(90 -52 10)" />
+            <rect x="-64" y="-2" width="24" height="10" rx="3" fill="#0B0E1A" opacity="0.85" />
+            <rect x="-58" y="-16" width="10" height="24" rx="3" fill="#0B0E1A" opacity="0.85" />
+            <circle cx="45" cy="-14" r="8" fill="#0B0E1A" opacity="0.85" />
+            <circle cx="65" cy="4" r="8" fill="#0B0E1A" opacity="0.85" />
+            <circle cx="45" cy="20" r="8" fill="#0B0E1A" opacity="0.85" />
+            <circle cx="25" cy="4" r="8" fill="#0B0E1A" opacity="0.85" />
+          </g>
+
+          {/* Speed lines */}
+          <g stroke="#EDEFF7" strokeOpacity="0.12" strokeWidth="3">
+            <line x1="40" y1="200" x2="130" y2="200" />
+            <line x1="20" y1="230" x2="90" y2="230" />
+            <line x1="520" y1="150" x2="600" y2="150" />
+            <line x1="500" y1="120" x2="560" y2="120" />
+          </g>
+        </svg>
       </div>
 
       {/* Search */}
@@ -433,21 +466,24 @@ function GameDetailScreen({ game, onCheckout }) {
         </button>
       </div>
 
-      {checkedName && (
+      {/* Тогтмол өндөртэй хэсэг — ID шалгах товч дарахад хуудасны хэмжээ огт өөрчлөгдөхгүй */}
+      <div style={{
+        height: 46, marginBottom: 24, display: "flex", alignItems: "center", gap: 10,
+        background: checkedName ? "rgba(198,255,61,0.08)" : "transparent",
+        border: checkedName ? "1px solid rgba(198,255,61,0.3)" : "1px solid transparent",
+        borderRadius: 12, padding: "0 14px", transition: "background 0.15s ease, border-color 0.15s ease"
+      }}>
         <div style={{
-          display: "flex", alignItems: "center", gap: 10, background: "rgba(198,255,61,0.08)",
-          border: "1px solid rgba(198,255,61,0.3)", borderRadius: 12, padding: "10px 14px", marginBottom: 24
+          width: 22, height: 22, borderRadius: "50%", background: "#C6FF3D", flexShrink: 0,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          opacity: checkedName ? 1 : 0, transition: "opacity 0.15s ease"
         }}>
-          <div style={{
-            width: 22, height: 22, borderRadius: "50%", background: "#C6FF3D",
-            display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
-          }}>
-            <Check size={13} color="#0B0E1A" strokeWidth={3} />
-          </div>
-          <span style={{ fontSize: 13, color: "#EDEFF7" }}>Тоглогч олдлоо: <b>{checkedName}</b></span>
+          <Check size={13} color="#0B0E1A" strokeWidth={3} />
         </div>
-      )}
-      {!checkedName && <div style={{ marginBottom: 14 }} />}
+        <span style={{ fontSize: 13, color: "#EDEFF7", opacity: checkedName ? 1 : 0, transition: "opacity 0.15s ease" }}>
+          Тоглогч олдлоо: <b>{checkedName || "—"}</b>
+        </span>
+      </div>
 
       {/* Packages */}
       <SectionLabel step="2" text={`${game.currency} багц сонгох`} />
