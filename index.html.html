@@ -2,7 +2,7 @@
 <html lang="mn">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>TopUpZone</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" />
 <style>
@@ -18,6 +18,8 @@
   }
   input::placeholder { color: #6C7189; }
   button { font-family: inherit; }
+  /* iOS/Android дээр input дээр товшиход сайт өөрөө zoom хийхээс сэргийлнэ (font-size 16px-ээс багагүй байх ёстой) */
+  input, textarea, select { font-size: 16px !important; }
 
   /* Утсан дэлгэцэд сайт бүтэн дүүрэн харагдана: хүрээ, sайдгайн зай алга болно */
   @media (max-width: 680px) {
@@ -211,10 +213,10 @@ function HomeScreen({ onSelectGame }) {
 
   return (
     <div style={{ padding: "24px 20px 60px" }}>
-      {/* Hero — текстгүй, 16:9 харьцаатай зураг */}
+      {/* Hero — текстгүй, хоёр захад бүтэн сунгасан, нарийхан баннер */}
       <div style={{
-        borderRadius: 20, marginBottom: 28, position: "relative", overflow: "hidden",
-        aspectRatio: "16 / 9", border: "1px solid rgba(198,255,61,0.15)"
+        marginLeft: -20, marginRight: -20, marginBottom: 28, position: "relative", overflow: "hidden",
+        aspectRatio: "20 / 7", borderTop: "1px solid rgba(198,255,61,0.15)", borderBottom: "1px solid rgba(198,255,61,0.15)"
       }}>
         <svg
           viewBox="0 0 640 360"
