@@ -46,7 +46,9 @@ h2{font:700 22px Unbounded,sans-serif;letter-spacing:-.02em;margin:14px 0 6px}
 .pr{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:10px;display:flex;flex-direction:column}
 .pr:before{content:"";position:absolute;top:10px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:var(--bg);border:1.5px solid var(--line);z-index:1}
 .art{height:130px;border-radius:12px;display:grid;place-items:center;font-size:62px}
-.pr h3{font:500 16px/1.25 Onest;margin:10px 4px 2px}
+.pr h3{font:500 16px/1.25 Onest;margin:2px 4px 2px}
+.br{font-size:12px;color:var(--mute);margin:10px 4px 0}.br b{color:var(--ink)}
+.o{padding-bottom:2px}.o button[aria-pressed=true]{background:var(--acc);color:var(--onacc);border-color:var(--acc)}
 .pr .sp{color:var(--mute);font-size:13px;margin:0 4px 10px;flex:1}
 .row{display:flex;align-items:center;justify-content:space-between;gap:6px;margin:0 4px 2px}
 .price{font:700 15px Unbounded,sans-serif}
@@ -111,27 +113,28 @@ footer{border-top:1px solid var(--line);padding:22px 0 30px;color:var(--mute);fo
 <body>
 <header><div class="wrap bar">
 <div class="logo"><i></i>Сигнал</div>
-<label class="search"><input id="q" type="search" placeholder="Чихэвч, гар, чийдэн хайх" aria-label="Хайх"></label>
+<label class="search"><input id="q" type="search" placeholder="Бараа, брэнд хайх" aria-label="Хайх"></label>
 <button class="cartbtn" id="openCart" aria-label="Сагс нээх">Сагс<b id="cnt">0</b></button>
 </div></header>
 
 <main class="wrap">
 <section class="hero">
 <div>
-<h1>Технологи өдөр бүр зүгээр л ажиллаг.</h1>
-<p>Ажил, тоглоом, гэр орны хэрэгтэй төхөөрөмжүүдийг нэг дороос сонго. Улаанбаатарт 24 цагийн дотор хүргэнэ.</p>
+<h1>АНУ, Солонгосын шилдэг технологи нэг дор.</h1>
+<p>Apple, Samsung, HyperX, Amazon, LG брэндийн утас, компьютер, чихэвч, микрофон, ухаалаг гэрийн бараа.</p>
 <a class="cta" href="#shop">Бараа үзэх</a>
 </div>
 <div class="stack" aria-hidden="true">
-<div class="t a"><span>🎧</span><b>Чихэвч</b>40 цаг ажиллана</div>
-<div class="t b"><span>⌨️</span><b>Механик гар</b>Чимээгүй товч</div>
-<div class="t c"><span>💡</span><b>Ухаалаг чийдэн</b>Утсаар удирдана</div>
-<div class="t d"><span>📽️</span><b>Проектор</b>4K дүрс</div>
+<div class="t a"><span>📱</span><b>iPhone</b>Apple, АНУ</div>
+<div class="t b"><span>🎙️</span><b>HyperX микрофон</b>Стрийм, подкаст</div>
+<div class="t c"><span>💻</span><b>MacBook Air</b>Apple, АНУ</div>
+<div class="t d"><span>🎧</span><b>Galaxy Buds</b>Samsung, Солонгос</div>
 </div>
 </section>
 
 <section id="shop">
 <h2>Бүх бараа</h2>
+<div class="chips o" id="origin" role="group" aria-label="Улс"></div>
 <div class="chips" id="chips" role="group" aria-label="Ангилал"></div>
 <div class="grid" id="grid"></div>
 </section>
@@ -145,12 +148,12 @@ footer{border-top:1px solid var(--line);padding:22px 0 30px;color:var(--mute);fo
 </section>
 
 <section class="facts">
-<div><b>24 цагт хүргэнэ</b><span>Нийслэлийн дотор үнэгүй, 200,000₮-өөс дээш захиалгад.</span></div>
+<div><b>Брэндийн эх хувилбар</b><span>Apple, Samsung, HyperX, Amazon, LG-ийн бүтээгдэхүүн.</span></div>
 <div><b>14 хоногт буцаана</b><span>Сав баглаа боодол нь бүтэн бол асуултгүй буцаана.</span></div>
 <div><b>1 жилийн баталгаа</b><span>Бүх барааг баталгаат хугацаанд нь засаж, солино.</span></div>
 </section>
 </main>
-<footer><div class="wrap">© 2026 Сигнал. Загварын жишээ сайт.</div></footer>
+<footer><div class="wrap">© 2026 Сигнал. Загварын жишээ сайт. Apple, Samsung, HyperX, Amazon, LG нь тус тусын эзэмшигчийн барааны тэмдэг.</div></footer>
 
 <div class="detail" id="detail" role="dialog" aria-modal="true" aria-label="Барааны дэлгэрэнгүй">
 <div class="dbar"><div class="wrap bar"><button class="back" id="back">‹ Буцах</button><span style="flex:1"></span><button class="cartbtn" id="openCart2">Сагс<b id="cnt2">0</b></button></div></div>
@@ -168,23 +171,28 @@ footer{border-top:1px solid var(--line);padding:22px 0 30px;color:var(--mute);fo
 
 <script>
 const P=[
-{id:1,n:"Шуугиан дарагч чихэвч",e:"🎧",c:"Аудио",p:389000,o:486000,s:"40 цаг, Bluetooth 5.3",t:1},
-{id:2,n:"Ухаалаг чийдэн",e:"💡",c:"Ухаалаг гэр",p:59000,s:"16 сая өнгө, утсаар удирдана",t:3},
-{id:3,n:"Мини проектор 4K",e:"📽️",c:"Ухаалаг гэр",p:1290000,o:1612000,s:"Хана дээр 120 инч хүртэл",t:2},
-{id:4,n:"Тоглоомын хэт",e:"🎮",c:"Тоглоом",p:199000,s:"Утасгүй, 30 цагийн цэнэг",t:4},
-{id:5,n:"Механик гар",e:"⌨️",c:"Тоглоом",p:259000,o:324000,s:"Чимээгүй товч, гэрэлтэй",t:1},
-{id:6,n:"Утасгүй цэнэглэгч",e:"🔋",c:"Аксессуар",p:89000,s:"3 төхөөрөмж зэрэг цэнэглэнэ",t:3},
-{id:7,n:"Зөөврийн чанга яригч",e:"🔊",c:"Аудио",p:149000,s:"Усны хамгаалалттай, 12 цаг",t:2},
-{id:8,n:"Ухаалаг цаг",e:"⌚",c:"Аксессуар",p:459000,s:"Зүрхний цохилт, 7 хоног ажиллана",t:4}];
+{id:1,n:"iPhone Pro",b:"Apple",r:"АНУ",e:"📱",c:"Гар утас",p:4590000,s:"OLED дэлгэц, Pro камер",t:1},
+{id:2,n:"iPad Air",b:"Apple",r:"АНУ",e:"📲",c:"Компьютер",p:2290000,s:"Зураг зурах, ном унших, ажиллах",t:4},
+{id:3,n:"MacBook Air",b:"Apple",r:"АНУ",e:"💻",c:"Компьютер",p:3790000,s:"Нимгэн, чимээгүй, өдөржин цэнэгтэй",t:1},
+{id:4,n:"AirPods Pro",b:"Apple",r:"АНУ",e:"🎧",c:"Аудио",p:480000,o:600000,s:"Шуугиан дарагч утасгүй чихэвч",t:3},
+{id:5,n:"Cloud тоглоомын чихэвч",b:"HyperX",r:"АНУ",e:"🎧",c:"Тоглоом",p:249000,s:"Салдаг микрофонтой, зөөлөн",t:2},
+{id:6,n:"QuadCast микрофон",b:"HyperX",r:"АНУ",e:"🎙️",c:"Тоглоом",p:320000,o:400000,s:"USB, стрийм болон подкаст",t:4},
+{id:7,n:"Echo Dot",b:"Amazon",r:"АНУ",e:"🔊",c:"Ухаалаг гэр",p:169000,s:"Alexa дуут туслахтай яригч",t:3},
+{id:8,n:"Kindle",b:"Amazon",r:"АНУ",e:"📖",c:"Компьютер",p:399000,s:"Нүд ядраадаггүй цахим ном",t:2},
+{id:9,n:"Galaxy S",b:"Samsung",r:"Солонгос",e:"📱",c:"Гар утас",p:3200000,o:4000000,s:"AMOLED дэлгэц, хүчтэй камер",t:3},
+{id:10,n:"Galaxy Buds",b:"Samsung",r:"Солонгос",e:"🎵",c:"Аудио",p:289000,s:"Шуугиан дарагч, утасгүй кейс",t:4},
+{id:11,n:"Galaxy Watch",b:"Samsung",r:"Солонгос",e:"⌚",c:"Аксессуар",p:799000,s:"Зүрх, алхам, нойр хянана",t:1},
+{id:12,n:"UltraGear монитор 27\"",b:"LG",r:"Солонгос",e:"🖥️",c:"Компьютер",p:1190000,s:"144 Гц, тоглоомд тохиромжтой",t:2},
+{id:13,n:"OLED телевиз 55\"",b:"LG",r:"Солонгос",e:"📺",c:"Ухаалаг гэр",p:2400000,o:3000000,s:"Гүн хар өнгө, тод дүрс",t:4}];
 const cats=["Бүгд",...new Set(P.map(x=>x.c))];
-let cat="Бүгд",term="",cart={};
+let cat="Бүгд",org="Бүгд",term="",cart={};const origins=["Бүгд","АНУ","Солонгос"];
 const $=i=>document.getElementById(i),fmt=n=>n.toLocaleString("en-US")+"₮";
-function chips(){$("chips").innerHTML=cats.map(c=>`<button aria-pressed="${c===cat}" data-c="${c}">${c}</button>`).join("")}
+function chips(){$("origin").innerHTML=origins.map(c=>`<button aria-pressed="${c===org}" data-o="${c}">${c==="Бүгд"?"Бүх улс":c}</button>`).join("");$("chips").innerHTML=cats.map(c=>`<button aria-pressed="${c===cat}" data-c="${c}">${c}</button>`).join("")}
 const card=x=>`<article class="pr">${x.o?'<div class="sale">-20%</div>':""}
-<div class="art" style="background:var(--t${x.t})">${x.e}</div><h3><a href="#p${x.id}">${x.n}</a></h3><p class="sp">${x.s}</p>
+<div class="art" style="background:var(--t${x.t})">${x.e}</div><p class="br"><b>${x.b}</b> ${x.r}</p><h3><a href="#p${x.id}">${x.n}</a></h3><p class="sp">${x.s}</p>
 <div class="row"><div class="price">${x.o?`<s>${fmt(x.o)}</s>`:""}${fmt(x.p)}</div><button class="add" data-id="${x.id}" aria-label="${x.n} сагсанд нэмэх">+</button></div></article>`;
 function grid(){
-const l=P.filter(x=>(cat==="Бүгд"||x.c===cat)&&x.n.toLowerCase().includes(term));
+const l=P.filter(x=>(cat==="Бүгд"||x.c===cat)&&(org==="Бүгд"||x.r===org)&&(x.n+" "+x.b).toLowerCase().includes(term));
 $("grid").innerHTML=l.length?l.map(card).join(""):'<p class="empty">Хайлтад тохирох бараа олдсонгүй. Өөр үгээр хайж үзнэ үү.</p>'}
 function draw(){
 const ids=Object.keys(cart),n=ids.reduce((a,i)=>a+cart[i],0);
@@ -197,6 +205,7 @@ $("total").textContent=fmt(sum);
 }
 let tt;function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),1600)}
 document.addEventListener("click",e=>{
+const o=e.target.closest("[data-o]");if(o){org=o.dataset.o;chips();grid();return}
 const c=e.target.closest("[data-c]");if(c){cat=c.dataset.c;chips();grid();return}
 const a=e.target.closest(".add,.addd");if(a){const id=a.dataset.id;cart[id]=(cart[id]||0)+1;draw();toast(P.find(p=>p.id==id).n+" сагсанд нэмэгдлээ");return}
 const q=e.target.closest(".q button");if(q){const id=q.dataset.id;cart[id]+=+q.dataset.d;if(cart[id]<1)delete cart[id];draw()}
@@ -208,14 +217,19 @@ document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;const sh=$("s
 $("openCart2").onclick=()=>$("sheet").classList.add("open");
 $("back").onclick=()=>{history.pushState(null,"","#");route()};
 const D={
-1:{d:"Орчны чимээг дарж, ажлын өрөө, автобус, нислэгт тайван орчин бүрдүүлнэ. Зөөлөн чихэвчтэй тул удаан зүүхэд ядрахгүй.",k:[["Ажиллах хугацаа","40 цаг"],["Холболт","Bluetooth 5.3"],["Цэнэглэх","USB-C"],["Жин","250 гр"]]},
-2:{d:"Утасны аппаар өнгө, гэрлийн тод байдлыг удирдана. Цагийн хуваарь тохируулж өглөө аажмаар асуулгах боломжтой.",k:[["Өнгө","16 сая"],["Чадал","9 Вт"],["Холболт","Wi-Fi 2.4 ГГц"],["Бөгжний төрөл","E27"]]},
-3:{d:"Өрөөгөө кино театр болгоно. Автомат фокус, налуулалтыг өөрөө засдаг тул тохируулахад хялбар.",k:[["Нягтрал","4K"],["Дэлгэцийн хэмжээ","120 инч хүртэл"],["Гэрэлтэлт","900 люмен"],["Холболт","HDMI, Wi-Fi, Bluetooth"]]},
-4:{d:"Утасгүй тоглоомын хэт нь компьютер, утас, консол дээр ажиллана. Гар нь хуруунд эвтэйхэн тохирно.",k:[["Холболт","Bluetooth, USB"],["Батарей","30 цаг"],["Тохирох төхөөрөмж","PC, Android, iOS"],["Чичиргээ","Тийм"]]},
-5:{d:"Чимээгүй товчтой механик гар. Шөнө ажиллахад бусдад саад болохгүй, товчны гэрлийг өөрөө тохируулна.",k:[["Товчны төрөл","Чимээгүй механик"],["Гэрэл","RGB"],["Холболт","USB-C кабель"],["Хэмжээ","Бүтэн (104 товч)"]]},
-6:{d:"Утас, цаг, чихэвчээ нэг дор зэрэг цэнэглэнэ. Орны хажууд эсвэл ширээн дээр цэвэрхэн байрлана.",k:[["Төхөөрөмж","3 зэрэг"],["Чадал","15 Вт хүртэл"],["Холболт","USB-C"],["Хамгаалалт","Хэт халалт, хэт цэнэг"]]},
-7:{d:"Гар дээр барьж явахад хялбар, усны шүршилтээс айдаггүй чанга яригч. Гадаа, хотын гадуур явахад тохиромжтой.",k:[["Ажиллах хугацаа","12 цаг"],["Усны хамгаалалт","IP67"],["Холболт","Bluetooth 5.2"],["Жин","540 гр"]]},
-8:{d:"Зүрхний цохилт, алхам, нойрыг хянаж утсанд мэдэгдэл дамжуулна. Нэг цэнэгээр долоо хоног ажиллана.",k:[["Батарей","7 хоног"],["Мэдрэгч","Зүрх, SpO2, алхам"],["Усны хамгаалалт","5 ATM"],["Тохирох утас","Android, iOS"]]}};
+1:{d:"Apple-ийн Pro цувралын утас. Тод дэлгэц, мэргэжлийн камер, өдөржин ажиллах батарейтай.",k:[["Дэлгэц","OLED"],["Камер","Pro камерын систем"],["Цэнэглэх","USB-C"]]},
+2:{d:"Зураг зурах, ном унших, видео үзэх, ажил хийхэд зориулсан хөнгөн таблет. Apple Pencil-тэй хэрэглэнэ.",k:[["Дэлгэц","Liquid Retina"],["Чип","Apple M цуврал"],["Цэнэглэх","USB-C"]]},
+3:{d:"Сургууль, ажилд тохиромжтой нимгэн, хөнгөн зөөврийн компьютер. Хөргөлтийн сэнсгүй тул чимээгүй.",k:[["Чип","Apple M цуврал"],["Батарей","Өдөржин"],["Дэлгэц","Liquid Retina"]]},
+4:{d:"Шуугиан дарах чадвартай утасгүй чихэвч. iPhone, iPad, Mac-тай хурдан холбогдоно.",k:[["Шуугиан дарах","Тийм"],["Холболт","Bluetooth"],["Кейс","Утасгүй цэнэглэнэ"]]},
+5:{d:"Тоглоомчдод зориулсан зөөлөн чихэвч. Салдаг микрофонтой, олон цагаар зүүхэд эвтэйхэн.",k:[["Микрофон","Салдаг"],["Холболт","3.5 мм"],["Тохирох","PC, консол, утас"]]},
+6:{d:"Стрийм, подкаст, дуу бичлэгт зориулсан USB микрофон. Залгаад шууд ажиллана.",k:[["Холболт","USB"],["Хэрэглээ","Стрийм, подкаст"],["Тохирох","PC, Mac, PlayStation"]]},
+7:{d:"Alexa дуут туслахтай ухаалаг чанга яригч. Хөгжим тоглуулах, гэрийн хэрэгслийг дуугаар удирдана.",k:[["Туслах","Alexa"],["Холболт","Wi-Fi, Bluetooth"],["Хэлбэр","Жижиг бөмбөлөг"]]},
+8:{d:"Цаасан ном шиг уншигддаг цахим ном унших төхөөрөмж. Нүд ядраадаггүй, нэг цэнэгээр удаан ажиллана.",k:[["Дэлгэц","E-ink"],["Батарей","Хэдэн долоо хоног"],["Гэрэл","Тохируулдаг арын гэрэл"]]},
+9:{d:"Samsung-ийн тэргүүлэх Android утас. Тод AMOLED дэлгэц, хүчирхэг камертай.",k:[["Дэлгэц","AMOLED"],["Үйлдлийн систем","Android"],["Цэнэглэх","USB-C"]]},
+10:{d:"Samsung утастай хамгийн сайн нийцдэг утасгүй чихэвч. Шуугиан дарах чадвартай.",k:[["Шуугиан дарах","Тийм"],["Холболт","Bluetooth"],["Кейс","Утасгүй цэнэглэнэ"]]},
+11:{d:"Зүрхний цохилт, нойр, алхмыг хянаж, утсанд ирсэн мэдэгдлийг гар дээр харуулна.",k:[["Мэдрэгч","Зүрх, алхам, нойр"],["Холболт","Bluetooth, Wi-Fi"],["Тохирох","Android"]]},
+12:{d:"Тоглоом болон өдөр тутмын ажилд зориулсан өндөр давтамжтай монитор.",k:[["Хэмжээ","27 инч"],["Давтамж","144 Гц"],["Холболт","HDMI, DisplayPort"]]},
+13:{d:"Гүн хар өнгө, тод дүрстэй OLED телевиз. Кино, тоглоомд тохиромжтой.",k:[["Дэлгэц","OLED"],["Хэмжээ","55 инч"],["Холболт","HDMI, Wi-Fi"]]}};
 let lastY=0;
 function route(){
 const m=location.hash.match(/^#p(\d+)$/),el=$("detail");
@@ -227,7 +241,7 @@ $("dbody").innerHTML=`<div class="dgrid"><div class="dart" style="background:var
 <div class="dprice">${x.o?`<s>${fmt(x.o)}</s>`:""}<b>${fmt(x.p)}</b>${x.o?`<em>${fmt(x.o-x.p)} хэмнэнэ</em>`:""}</div>
 <p class="dd">${d.d}</p>
 <button class="addd" data-id="${x.id}">Сагсанд нэмэх</button>
-<dl class="spec">${d.k.map(([a,b])=>`<div><dt>${a}</dt><dd>${b}</dd></div>`).join("")}</dl></div></div>
+<dl class="spec">${[["Брэнд",x.b+", "+x.r],...d.k].map(([a,b])=>`<div><dt>${a}</dt><dd>${b}</dd></div>`).join("")}</dl></div></div>
 <h2>Төстэй бараа</h2><div class="grid">${rel.map(card).join("")}</div>`;
 el.classList.add("open");el.scrollTop=0;document.body.style.overflow="hidden";document.title=x.n+" — Сигнал";
 }
