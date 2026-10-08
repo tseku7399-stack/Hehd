@@ -11,8 +11,8 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a1718;--card:#122324;--ink:#e6f2ef;--mute:#8fb0ac;--line:#25403f;--acc:#9b7bff;--onacc:#10102a;--t1:#1b2d52;--t2:#4a2f22;--t3:#1d4430;--t4:#3b2655}}
 :root[data-theme="dark"]{--bg:#0a1718;--card:#122324;--ink:#e6f2ef;--mute:#8fb0ac;--line:#25403f;--acc:#9b7bff;--onacc:#10102a;--t1:#1b2d52;--t2:#4a2f22;--t3:#1d4430;--t4:#3b2655}
 *{box-sizing:border-box;margin:0}
-html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth}
-body{background:var(--bg);color:var(--ink);font:400 16px/1.5 Onest,system-ui,sans-serif;overflow-x:hidden}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;overflow-x:hidden;overscroll-behavior-x:none;touch-action:pan-y pinch-zoom}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.5 Onest,system-ui,sans-serif;overflow-x:clip;max-width:100%;touch-action:pan-y pinch-zoom}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 :focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .wrap{max-width:1080px;margin:0 auto;padding:0 18px}
@@ -29,14 +29,14 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 h1{font:700 clamp(30px,7.4vw,58px)/1.08 Unbounded,sans-serif;letter-spacing:-.03em}
 .hero p{color:var(--mute);max-width:44ch;margin:14px 0 22px;font-size:17px}
 .cta{display:inline-block;background:var(--acc);color:var(--onacc);font-weight:700;padding:14px 24px;border-radius:12px;text-decoration:none}
-.stack{position:relative;height:250px}
-.stack .t{position:absolute;width:150px;padding:14px;border-radius:16px;border:1.5px solid var(--ink);font-size:13px;color:#0d2b2c}
+.stack{position:relative;height:270px}
+.stack .t{position:absolute;width:min(170px,42%);padding:14px;overflow-wrap:anywhere;border-radius:16px;border:1.5px solid var(--ink);font-size:13px;color:#0d2b2c}
 .stack .t span{display:block;font-size:46px;line-height:1.1}
 .stack .t b{display:block;margin-top:6px}
 .t.a{background:var(--sun);left:2%;top:18px;transform:rotate(-7deg)}
-.t.b{background:#cdbbff;left:32%;top:0;transform:rotate(4deg);z-index:1}
-.t.c{background:#b8ecce;left:60%;top:46px;transform:rotate(-3deg)}
-.t.d{background:#ffc9ad;left:20%;top:128px;transform:rotate(5deg);z-index:2}
+.t.b{background:#cdbbff;left:30%;top:0;transform:rotate(4deg);z-index:1}
+.t.c{background:#b8ecce;left:54%;top:46px;transform:rotate(-3deg)}
+.t.d{background:#ffc9ad;left:16%;top:128px;transform:rotate(5deg);z-index:2}
 .stack .t{box-shadow:5px 5px 0 var(--ink)}
 .chips{display:flex;gap:8px;overflow-x:auto;padding:6px 0 14px;scrollbar-width:none}
 .chips button{flex:none;height:40px;padding:0 18px;border-radius:20px;border:1.5px solid var(--line);background:var(--card);font-weight:500}
@@ -82,12 +82,12 @@ footer{border-top:1px solid var(--line);padding:22px 0 30px;color:var(--mute);fo
 .q button{width:30px;height:30px;border-radius:9px;border:1.5px solid var(--line);font-weight:700}
 .tot{display:flex;justify-content:space-between;font:700 18px Unbounded,sans-serif;margin:8px 0 12px}
 .tot+button{width:100%;height:50px;border-radius:14px;background:var(--acc);color:var(--onacc);font-weight:700}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:14px;opacity:0;pointer-events:none;transition:.25s;z-index:30;font-weight:500;white-space:nowrap}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:14px;opacity:0;pointer-events:none;transition:.25s;z-index:30;font-weight:500;max-width:90vw;text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 .pr h3 a{color:inherit;text-decoration:none}
 .pr h3 a::after{content:"";position:absolute;inset:0;border-radius:18px}
-.pr:hover{border-color:var(--ink)}
-.detail{position:fixed;inset:0;z-index:15;background:var(--bg);overflow-y:auto;display:none;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+.pr{cursor:pointer}.pr:hover{border-color:var(--ink)}
+.detail{position:fixed;inset:0;z-index:15;background:var(--bg);overflow-y:auto;overflow-x:hidden;display:none;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
 .detail.open{display:block}
 .dbar{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);z-index:2}
 .back{height:42px;padding:0 18px 0 12px;border-radius:21px;border:1.5px solid var(--line);background:var(--card);font-weight:500}
@@ -106,14 +106,16 @@ footer{border-top:1px solid var(--line);padding:22px 0 30px;color:var(--mute);fo
 .spec dt{color:var(--mute)}
 .spec dd{font-weight:500;text-align:right}
 @media (min-width:720px){.dgrid{grid-template-columns:1fr 1fr;gap:40px;padding-top:40px}.dart{height:420px;font-size:170px}.addd{width:auto;padding:0 40px}}
-@media (min-width:720px){.hero{grid-template-columns:1.2fr 1fr;align-items:center;padding:60px 0 40px}.stack{height:320px}.stack .t{width:180px}.stack .t span{font-size:58px}.grid{grid-template-columns:repeat(4,1fr)}.deal{grid-template-columns:1fr auto;align-items:center;padding:34px}.facts{grid-template-columns:repeat(3,1fr)}.art{height:150px}}
+@media (min-width:720px){.hero{grid-template-columns:1.2fr 1fr;align-items:center;padding:60px 0 40px}.stack{height:320px}.stack .t{width:min(180px,42%)}.stack .t span{font-size:58px}.grid{grid-template-columns:repeat(4,1fr)}.deal{grid-template-columns:1fr auto;align-items:center;padding:34px}.facts{grid-template-columns:repeat(3,1fr)}.art{height:150px}}
+@media (max-width:520px){.bar{gap:8px}.logo{font-size:17px}.cartbtn{padding:0 12px}}
+@media (max-width:719px){.price{font-size:11px;min-width:0}.add{width:36px;height:36px;font-size:20px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <header><div class="wrap bar">
 <div class="logo"><i></i>Сигнал</div>
-<label class="search"><input id="q" type="search" placeholder="Бараа, брэнд хайх" aria-label="Хайх"></label>
+<label class="search"><input id="q" type="search" placeholder="Хайх" aria-label="Хайх"></label>
 <button class="cartbtn" id="openCart" aria-label="Сагс нээх">Сагс<b id="cnt">0</b></button>
 </div></header>
 
@@ -188,7 +190,7 @@ const cats=["Бүгд",...new Set(P.map(x=>x.c))];
 let cat="Бүгд",org="Бүгд",term="",cart={};const origins=["Бүгд","АНУ","Солонгос"];
 const $=i=>document.getElementById(i),fmt=n=>n.toLocaleString("en-US")+"₮";
 function chips(){$("origin").innerHTML=origins.map(c=>`<button aria-pressed="${c===org}" data-o="${c}">${c==="Бүгд"?"Бүх улс":c}</button>`).join("");$("chips").innerHTML=cats.map(c=>`<button aria-pressed="${c===cat}" data-c="${c}">${c}</button>`).join("")}
-const card=x=>`<article class="pr">${x.o?'<div class="sale">-20%</div>':""}
+const card=x=>`<article class="pr" data-pid="${x.id}">${x.o?'<div class="sale">-20%</div>':""}
 <div class="art" style="background:var(--t${x.t})">${x.e}</div><p class="br"><b>${x.b}</b> ${x.r}</p><h3><a href="#p${x.id}">${x.n}</a></h3><p class="sp">${x.s}</p>
 <div class="row"><div class="price">${x.o?`<s>${fmt(x.o)}</s>`:""}${fmt(x.p)}</div><button class="add" data-id="${x.id}" aria-label="${x.n} сагсанд нэмэх">+</button></div></article>`;
 function grid(){
@@ -205,6 +207,7 @@ $("total").textContent=fmt(sum);
 }
 let tt;function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),1600)}
 document.addEventListener("click",e=>{
+const pc=e.target.closest(".pr");if(pc&&!e.target.closest(".add")){e.preventDefault();const id=+pc.dataset.pid;try{history.pushState(null,"","#p"+id)}catch(_){}showP(id);return}
 const o=e.target.closest("[data-o]");if(o){org=o.dataset.o;chips();grid();return}
 const c=e.target.closest("[data-c]");if(c){cat=c.dataset.c;chips();grid();return}
 const a=e.target.closest(".add,.addd");if(a){const id=a.dataset.id;cart[id]=(cart[id]||0)+1;draw();toast(P.find(p=>p.id==id).n+" сагсанд нэмэгдлээ");return}
@@ -215,7 +218,7 @@ $("openCart").onclick=()=>$("sheet").classList.add("open");
 $("bk").onclick=()=>$("sheet").classList.remove("open");
 document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;const sh=$("sheet");if(sh.classList.contains("open"))sh.classList.remove("open");else if($("detail").classList.contains("open"))$("back").click()});
 $("openCart2").onclick=()=>$("sheet").classList.add("open");
-$("back").onclick=()=>{history.pushState(null,"","#");route()};
+$("back").onclick=()=>{try{history.pushState(null,"","#")}catch(_){}showP(0)};
 const D={
 1:{d:"Apple-ийн Pro цувралын утас. Тод дэлгэц, мэргэжлийн камер, өдөржин ажиллах батарейтай.",k:[["Дэлгэц","OLED"],["Камер","Pro камерын систем"],["Цэнэглэх","USB-C"]]},
 2:{d:"Зураг зурах, ном унших, видео үзэх, ажил хийхэд зориулсан хөнгөн таблет. Apple Pencil-тэй хэрэглэнэ.",k:[["Дэлгэц","Liquid Retina"],["Чип","Apple M цуврал"],["Цэнэглэх","USB-C"]]},
@@ -231,10 +234,10 @@ const D={
 12:{d:"Тоглоом болон өдөр тутмын ажилд зориулсан өндөр давтамжтай монитор.",k:[["Хэмжээ","27 инч"],["Давтамж","144 Гц"],["Холболт","HDMI, DisplayPort"]]},
 13:{d:"Гүн хар өнгө, тод дүрстэй OLED телевиз. Кино, тоглоомд тохиромжтой.",k:[["Дэлгэц","OLED"],["Хэмжээ","55 инч"],["Холболт","HDMI, Wi-Fi"]]}};
 let lastY=0;
-function route(){
-const m=location.hash.match(/^#p(\d+)$/),el=$("detail");
-if(!m){el.classList.remove("open");document.body.style.overflow="";document.title="Сигнал — технологийн дэлгүүр";return}
-const x=P.find(r=>r.id==m[1]);if(!x){history.pushState(null,"","#");return route()}
+function route(){const m=location.hash.match(/^#p(\d+)$/);showP(m?+m[1]:0)}
+function showP(id){const el=$("detail");
+if(!id){el.classList.remove("open");document.body.style.overflow="";document.title="Сигнал — технологийн дэлгүүр";return}
+const x=P.find(r=>r.id===id);if(!x)return showP(0);
 const d=D[x.id],rel=[...P.filter(r=>r.c===x.c&&r.id!==x.id),...P.filter(r=>r.c!==x.c&&r.id!==x.id)].slice(0,4);
 $("dbody").innerHTML=`<div class="dgrid"><div class="dart" style="background:var(--t${x.t})">${x.e}</div>
 <div><h1 class="dh">${x.n}</h1>
@@ -245,7 +248,7 @@ $("dbody").innerHTML=`<div class="dgrid"><div class="dart" style="background:var
 <h2>Төстэй бараа</h2><div class="grid">${rel.map(card).join("")}</div>`;
 el.classList.add("open");el.scrollTop=0;document.body.style.overflow="hidden";document.title=x.n+" — Сигнал";
 }
-addEventListener("hashchange",route);
+addEventListener("hashchange",route);addEventListener("popstate",route);
 $("buy").onclick=()=>{if(!Object.keys(cart).length){toast("Эхлээд бараа нэмнэ үү");return}cart={};draw();$("sheet").classList.remove("open");toast("Захиалга хүлээн авлаа")};
 function tick(){const n=new Date(),e=new Date(n);e.setHours(24,0,0,0);let d=Math.floor((e-n)/1000);
 const p=v=>String(v).padStart(2,"0"),sm=t=>t.replace(/^\d+/,"");
