@@ -135,6 +135,12 @@ footer{border-top:1px solid var(--line);padding:22px 0 30px;color:var(--mute);fo
 .hp{padding:12px 0;border-bottom:1px solid var(--line)}
 .hp span{display:block;color:var(--mute);font-size:14px}
 .ph{background:#fff!important}.ph img{width:100%;height:100%;object-fit:contain;border-radius:inherit;padding:6px}
+.sec span{font-weight:400;color:var(--mute)}
+.sw{display:flex;gap:12px;padding:2px 2px 6px}
+.sw button{width:38px;height:38px;border-radius:50%;background:var(--c);border:2px solid var(--line);box-shadow:inset 0 0 0 3px var(--bg)}
+.sw button[aria-pressed=true]{border-color:var(--acc);box-shadow:inset 0 0 0 3px var(--bg),0 0 0 2px var(--acc)}
+.it small{color:var(--mute);font-size:12px}
+.dgrid .chips{padding-bottom:18px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -212,8 +218,8 @@ footer{border-top:1px solid var(--line);padding:22px 0 30px;color:var(--mute);fo
 
 <script>
 const P=[
-{id:1,n:"iPhone Pro",b:"Apple",r:"АНУ",e:"📱",c:"Гар утас",p:4590000,s:"OLED дэлгэц, Pro камер",t:1},
-{id:2,n:"iPad Air",b:"Apple",r:"АНУ",e:"📲",c:"Компьютер",p:2290000,s:"Зураг зурах, ном унших, ажиллах",t:4},
+{id:1,n:"iPhone 18 Pro Max",b:"Apple",r:"АНУ",e:"📱",c:"Гар утас",p:4590000,s:"A20 Pro чип, OLED дэлгэц",t:1,img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3Qr3CYEU6n6lRh_Sq-gZenju4XakUChriknulAtGZRB4UDLspMFW9as0&s=10",co:[["Хар","#2b2b2e"],["Мөнгөлөг","#dcdde0"],["Мөсөн цэнхэр","#b4cfe4"],["Бургунди","#6b1d33"]],st:[["256GB",0],["512GB",640000],["1TB",1910000],["2TB",3830000]]},
+{id:2,n:"iPad Air",b:"Apple",r:"АНУ",e:"📲",c:"Компьютер",p:2290000,s:"Зураг зурах, ном унших, ажиллах",t:4,img:"https://cdnp.cody.mn/spree/images/3462299/zoom/ipad_air_m3_SG.jpg?1775019688"},
 {id:3,n:"MacBook Air",b:"Apple",r:"АНУ",e:"💻",c:"Компьютер",p:3790000,s:"Нимгэн, чимээгүй, өдөржин цэнэгтэй",t:1,img:"https://m.media-amazon.com/images/I/81rNO0tZ+EL.jpg"},
 {id:4,n:"AirPods Pro",b:"Apple",r:"АНУ",e:"🎧",c:"Аудио",p:480000,o:600000,s:"Шуугиан дарагч утасгүй чихэвч",t:3,img:"https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airpods-pro-3-hero-select-202509_FMT_WHH?wid=1200&hei=630&fmt=jpeg&qlt=95&.v=1758077264181"},
 {id:5,n:"Cloud тоглоомын чихэвч",b:"HyperX",r:"АНУ",e:"🎧",c:"Тоглоом",p:249000,s:"Салдаг микрофонтой, зөөлөн",t:2,img:"https://hitech-bc-main.s3.ap-southeast-1.amazonaws.com/7b82216b-04a4-4893-9bc3-8f4175c2e325.jpg"},
@@ -225,7 +231,7 @@ const P=[
 {id:11,n:"Galaxy Watch",b:"Samsung",r:"Солонгос",e:"⌚",c:"Аксессуар",p:799000,s:"Зүрх, алхам, нойр хянана",t:1},
 {id:12,n:"UltraGear монитор 27\"",b:"LG",r:"Солонгос",e:"🖥️",c:"Компьютер",p:1190000,s:"144 Гц, тоглоомд тохиромжтой",t:2},
 {id:13,n:"OLED телевиз 55\"",b:"LG",r:"Солонгос",e:"📺",c:"Ухаалаг гэр",p:2400000,o:3000000,s:"Гүн хар өнгө, тод дүрс",t:4}];
-const pic=x=>x.img?`<img src="${x.img.replace(/&/g,"&amp;")}" alt="${x.n}" referrerpolicy="no-referrer" onerror="this.outerHTML='${x.e}'">`:x.e;
+const pic=(x,im=x.img)=>im?`<img src="${im.replace(/&/g,"&amp;")}" alt="${x.n}" referrerpolicy="no-referrer" onerror="this.outerHTML='${x.e}'">`:x.e;
 const cats=["Бүгд",...new Set(P.map(x=>x.c))];
 let cat="Бүгд",org="Бүгд",term="",cart={};const origins=["Бүгд","АНУ","Солонгос"];
 const $=i=>document.getElementById(i),fmt=n=>n.toLocaleString("en-US")+"₮";
@@ -236,13 +242,15 @@ const card=x=>`<article class="pr" data-pid="${x.id}">${x.o?'<div class="sale">-
 function grid(){
 const l=P.filter(x=>(cat==="Бүгд"||x.c===cat)&&(org==="Бүгд"||x.r===org)&&(x.n+" "+x.b).toLowerCase().includes(term));
 $("grid").innerHTML=l.length?l.map(card).join(""):'<p class="empty">Хайлтад тохирох бараа олдсонгүй. Өөр үгээр хайж үзнэ үү.</p>'}
+const dk=x=>x.st?x.id+":0:0":String(x.id);
+function vi(k){const[a,c,t]=k.split(":"),x=P.find(p=>p.id==a),ci=+c||0,si=+t||0;return{x,price:x.p+(x.st?x.st[si][1]:0),label:x.co?`${x.co[ci][0]}, ${x.st[si][0]}`:"",img:(x.co&&x.co[ci][2])||x.img}}
 function draw(){
 const ids=Object.keys(cart),n=ids.reduce((a,i)=>a+cart[i],0);
 $("cnt").textContent=n;$("cnt2").textContent=n;
 let sum=0;
-$("items").innerHTML=ids.length?ids.map(i=>{const x=P.find(p=>p.id==i);sum+=x.p*cart[i];
-return `<div class="it"><div class="em${x.img?" ph":""}" style="background:var(--t${x.t})">${pic(x)}</div><div>${x.n}<br><b>${fmt(x.p)}</b></div>
-<div class="q"><button data-d="-1" data-id="${i}" aria-label="Хасах">−</button>${cart[i]}<button data-d="1" data-id="${i}" aria-label="Нэмэх">+</button></div></div>`}).join(""):'<p class="empty">Сагс хоосон байна. Дуртай барааныхаа + товчийг дарна уу.</p>';
+$("items").innerHTML=ids.length?ids.map(k=>{const v=vi(k),x=v.x;sum+=v.price*cart[k];
+return `<div class="it"><div class="em${v.img?" ph":""}" style="background:var(--t${x.t})">${pic(x,v.img)}</div><div>${x.n}${v.label?`<br><small>${v.label}</small>`:""}<br><b>${fmt(v.price)}</b></div>
+<div class="q"><button data-d="-1" data-key="${k}" aria-label="Хасах">−</button>${cart[k]}<button data-d="1" data-key="${k}" aria-label="Нэмэх">+</button></div></div>`}).join(""):'<p class="empty">Сагс хоосон байна. Дуртай барааныхаа + товчийг дарна уу.</p>';
 $("total").textContent=fmt(sum);
 }
 let tt;function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),1600)}
@@ -252,10 +260,12 @@ const mp=e.target.closest("[data-panel]");if(mp){menuSet(false);openPanel(mp.dat
 const th=e.target.closest("[data-th]");if(th){theme=th.dataset.th;sv("sg_theme",theme);applyTheme(theme);openPanel("settings");return}
 const ac=e.target.closest("[data-act]");if(ac){if(ac.dataset.act==="save"){prof={name:$("pname").value.trim(),phone:$("pphone").value.trim()};sv("sg_profile",prof);toast("Профайл хадгалагдлаа");openPanel("profile")}else{orders=[];sv("sg_orders",orders);toast("Түүх арилгагдлаа")}return}
 const pc=e.target.closest(".pr");if(pc&&!e.target.closest(".add")){e.preventDefault();const id=+pc.dataset.pid;try{history.pushState(null,"","#p"+id)}catch(_){}showP(id);return}
+const oc=e.target.closest("[data-co]");if(oc){sel.ci=+oc.dataset.co;paint();return}
+const os=e.target.closest("[data-st]");if(os){sel.si=+os.dataset.st;paint();return}
 const o=e.target.closest("[data-o]");if(o){org=o.dataset.o;chips();grid();return}
 const c=e.target.closest("[data-c]");if(c){cat=c.dataset.c;chips();grid();return}
-const a=e.target.closest(".add,.addd");if(a){const id=a.dataset.id;cart[id]=(cart[id]||0)+1;draw();toast(P.find(p=>p.id==id).n+" сагсанд нэмэгдлээ");return}
-const q=e.target.closest(".q button");if(q){const id=q.dataset.id;cart[id]+=+q.dataset.d;if(cart[id]<1)delete cart[id];draw()}
+const a=e.target.closest(".add,.addd");if(a){const k=a.dataset.key||dk(P.find(p=>p.id==a.dataset.id));cart[k]=(cart[k]||0)+1;draw();toast(vi(k).x.n+" сагсанд нэмэгдлээ");return}
+const q=e.target.closest(".q button");if(q){const k=q.dataset.key;cart[k]+=+q.dataset.d;if(cart[k]<1)delete cart[k];draw()}
 });
 $("q").addEventListener("input",e=>{term=e.target.value.trim().toLowerCase();grid()});
 const menu=$("menu"),mb=$("menuBtn"),sbox=$("sbox"),sb=$("sBtn");
@@ -286,7 +296,7 @@ document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if($("panel")
 $("openCart2").onclick=()=>$("sheet").classList.add("open");
 $("back").onclick=()=>{try{history.pushState(null,"","#")}catch(_){}showP(0)};
 const D={
-1:{d:"Apple-ийн Pro цувралын утас. Тод дэлгэц, мэргэжлийн камер, өдөржин ажиллах батарейтай.",k:[["Дэлгэц","OLED"],["Камер","Pro камерын систем"],["Цэнэглэх","USB-C"]]},
+1:{d:"Apple-ийн хамгийн том Pro утас. Хүчирхэг A20 Pro чип, тод OLED дэлгэц, өдөржин ажиллах батарейтай.",k:[["Чип","Apple A20 Pro"],["Дэлгэц","OLED"],["Цэнэглэх","USB-C"]]},
 2:{d:"Зураг зурах, ном унших, видео үзэх, ажил хийхэд зориулсан хөнгөн таблет. Apple Pencil-тэй хэрэглэнэ.",k:[["Дэлгэц","Liquid Retina"],["Чип","Apple M цуврал"],["Цэнэглэх","USB-C"]]},
 3:{d:"Сургууль, ажилд тохиромжтой нимгэн, хөнгөн зөөврийн компьютер. Хөргөлтийн сэнсгүй тул чимээгүй.",k:[["Чип","Apple M цуврал"],["Батарей","Өдөржин"],["Дэлгэц","Liquid Retina"]]},
 4:{d:"Шуугиан дарах чадвартай утасгүй чихэвч. iPhone, iPad, Mac-тай хурдан холбогдоно.",k:[["Шуугиан дарах","Тийм"],["Холболт","Bluetooth"],["Кейс","Утасгүй цэнэглэнэ"]]},
@@ -304,19 +314,23 @@ function route(){const m=location.hash.match(/^#p(\d+)$/);showP(m?+m[1]:0)}
 function showP(id){const el=$("detail");
 if(!id){el.classList.remove("open");document.body.style.overflow="";document.title="Сигнал — технологийн дэлгүүр";return}
 const x=P.find(r=>r.id===id);if(!x)return showP(0);
-const d=D[x.id],rel=[...P.filter(r=>r.c===x.c&&r.id!==x.id),...P.filter(r=>r.c!==x.c&&r.id!==x.id)].slice(0,4);
-$("dbody").innerHTML=`<div class="dgrid"><div class="dart${x.img?" ph":""}" style="background:var(--t${x.t})">${pic(x)}</div>
-<div><h1 class="dh">${x.n}</h1>
-<div class="dprice">${x.o?`<s>${fmt(x.o)}</s>`:""}<b>${fmt(x.p)}</b>${x.o?`<em>${fmt(x.o-x.p)} хэмнэнэ</em>`:""}</div>
-<p class="dd">${d.d}</p>
-<button class="addd" data-id="${x.id}">Сагсанд нэмэх</button>
-<dl class="spec">${[["Брэнд",x.b+", "+x.r],...d.k].map(([a,b])=>`<div><dt>${a}</dt><dd>${b}</dd></div>`).join("")}</dl></div></div>
-<h2>Төстэй бараа</h2><div class="grid">${rel.map(card).join("")}</div>`;
+cur=x;sel={ci:0,si:0};paint();
 el.classList.add("open");el.scrollTop=0;document.body.style.overflow="hidden";document.title=x.n+" — Сигнал";
 }
+let sel={ci:0,si:0},cur=null;
+function paint(){const x=cur,d=D[x.id],rel=[...P.filter(r=>r.c===x.c&&r.id!==x.id),...P.filter(r=>r.c!==x.c&&r.id!==x.id)].slice(0,4);
+const key=x.st?`${x.id}:${sel.ci}:${sel.si}`:String(x.id),v=vi(key);
+const opts=x.co?`<p class="sec">Өнгө: <span>${x.co[sel.ci][0]}</span></p><div class="sw" role="group" aria-label="Өнгө">${x.co.map((c,i)=>`<button data-co="${i}" aria-pressed="${i===sel.ci}" aria-label="${c[0]}" style="--c:${c[1]}"></button>`).join("")}</div><p class="sec">Багтаамж</p><div class="chips" role="group" aria-label="Багтаамж">${x.st.map((t,i)=>`<button data-st="${i}" aria-pressed="${i===sel.si}">${t[0]}</button>`).join("")}</div>`:"";
+$("dbody").innerHTML=`<div class="dgrid"><div class="dart${v.img?" ph":""}" style="background:var(--t${x.t})">${pic(x,v.img)}</div>
+<div><h1 class="dh">${x.n}</h1>
+<div class="dprice">${x.o?`<s>${fmt(x.o)}</s>`:""}<b>${fmt(v.price)}</b>${x.o?`<em>${fmt(x.o-x.p)} хэмнэнэ</em>`:""}</div>
+<p class="dd">${d.d}</p>${opts}
+<button class="addd" data-key="${key}">Сагсанд нэмэх</button>
+<dl class="spec">${[["Брэнд",x.b+", "+x.r],...d.k].map(([a,b])=>`<div><dt>${a}</dt><dd>${b}</dd></div>`).join("")}</dl></div></div>
+<h2>Төстэй бараа</h2><div class="grid">${rel.map(card).join("")}</div>`}
 addEventListener("hashchange",route);addEventListener("popstate",route);
 $("buy").onclick=()=>{if(!Object.keys(cart).length){toast("Эхлээд бараа нэмнэ үү");return}
-const items=Object.keys(cart).map(i=>{const x=P.find(p=>p.id==i);return{n:x.n,b:x.b,q:cart[i],p:x.p}}),d=new Date();
+const items=Object.keys(cart).map(k=>{const v=vi(k);return{n:v.x.n+(v.label?` (${v.label})`:""),b:v.x.b,q:cart[k],p:v.price}}),d=new Date();
 orders.unshift({id:1001+orders.length,date:`${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`,items,total:items.reduce((a,i)=>a+i.p*i.q,0)});sv("sg_orders",orders);
 cart={};draw();$("sheet").classList.remove("open");toast("Захиалга хүлээн авлаа")};
 function tick(){const n=new Date(),e=new Date(n);e.setHours(24,0,0,0);let d=Math.floor((e-n)/1000);
