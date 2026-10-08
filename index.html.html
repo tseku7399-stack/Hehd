@@ -51,7 +51,7 @@ h2{font:700 22px Unbounded,sans-serif;letter-spacing:-.02em;margin:14px 0 6px}
 .row{display:flex;align-items:center;justify-content:space-between;gap:6px;margin:0 4px 2px}
 .price{font:700 15px Unbounded,sans-serif}
 .price s{display:block;font:400 12px Onest;color:var(--mute)}
-.add{width:42px;height:42px;border-radius:12px;background:var(--acc);color:var(--onacc);font-size:22px;font-weight:700;flex:none;transition:transform .15s}
+.add{position:relative;z-index:2;width:42px;height:42px;border-radius:12px;background:var(--acc);color:var(--onacc);font-size:22px;font-weight:700;flex:none;transition:transform .15s}
 .add:active{transform:scale(.88)}
 .sale{position:absolute;top:18px;right:-4px;z-index:1;background:var(--sun);color:#0d2b2c;font-weight:700;font-size:13px;padding:3px 10px;border-radius:8px 0 0 8px;transform:translateX(-8px)}
 .empty{grid-column:1/-1;padding:30px;text-align:center;color:var(--mute)}
@@ -82,6 +82,28 @@ footer{border-top:1px solid var(--line);padding:22px 0 30px;color:var(--mute);fo
 .tot+button{width:100%;height:50px;border-radius:14px;background:var(--acc);color:var(--onacc);font-weight:700}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:14px;opacity:0;pointer-events:none;transition:.25s;z-index:30;font-weight:500;white-space:nowrap}
 .toast.on{opacity:1;transform:translate(-50%,0)}
+.pr h3 a{color:inherit;text-decoration:none}
+.pr h3 a::after{content:"";position:absolute;inset:0;border-radius:18px}
+.pr:hover{border-color:var(--ink)}
+.detail{position:fixed;inset:0;z-index:15;background:var(--bg);overflow-y:auto;display:none;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+.detail.open{display:block}
+.dbar{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);z-index:2}
+.back{height:42px;padding:0 18px 0 12px;border-radius:21px;border:1.5px solid var(--line);background:var(--card);font-weight:500}
+.dgrid{display:grid;gap:22px;padding:22px 0 10px}
+.dart{height:280px;border-radius:22px;display:grid;place-items:center;font-size:130px}
+.dh{font:700 clamp(24px,6vw,36px)/1.15 Unbounded,sans-serif;letter-spacing:-.02em}
+.dprice{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:14px 0}
+.dprice b{font:700 26px Unbounded,sans-serif}
+.dprice s{color:var(--mute)}
+.dprice em{font-style:normal;background:var(--sun);color:#0d2b2c;font-weight:700;font-size:13px;padding:3px 10px;border-radius:8px}
+.dd{color:var(--mute);max-width:52ch;margin-bottom:18px}
+.addd{width:100%;height:54px;border-radius:14px;background:var(--acc);color:var(--onacc);font-weight:700;font-size:17px}
+.addd:active{transform:scale(.98)}
+.spec{margin-top:22px}
+.spec div{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-top:1px solid var(--line)}
+.spec dt{color:var(--mute)}
+.spec dd{font-weight:500;text-align:right}
+@media (min-width:720px){.dgrid{grid-template-columns:1fr 1fr;gap:40px;padding-top:40px}.dart{height:420px;font-size:170px}.addd{width:auto;padding:0 40px}}
 @media (min-width:720px){.hero{grid-template-columns:1.2fr 1fr;align-items:center;padding:60px 0 40px}.stack{height:320px}.stack .t{width:180px}.stack .t span{font-size:58px}.grid{grid-template-columns:repeat(4,1fr)}.deal{grid-template-columns:1fr auto;align-items:center;padding:34px}.facts{grid-template-columns:repeat(3,1fr)}.art{height:150px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -130,6 +152,10 @@ footer{border-top:1px solid var(--line);padding:22px 0 30px;color:var(--mute);fo
 </main>
 <footer><div class="wrap">© 2026 Сигнал. Загварын жишээ сайт.</div></footer>
 
+<div class="detail" id="detail" role="dialog" aria-modal="true" aria-label="Барааны дэлгэрэнгүй">
+<div class="dbar"><div class="wrap bar"><button class="back" id="back">‹ Буцах</button><span style="flex:1"></span><button class="cartbtn" id="openCart2">Сагс<b id="cnt2">0</b></button></div></div>
+<div class="wrap" id="dbody"></div>
+</div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Сагс">
 <div class="bk" id="bk"></div>
 <div class="box">
@@ -154,14 +180,15 @@ const cats=["Бүгд",...new Set(P.map(x=>x.c))];
 let cat="Бүгд",term="",cart={};
 const $=i=>document.getElementById(i),fmt=n=>n.toLocaleString("en-US")+"₮";
 function chips(){$("chips").innerHTML=cats.map(c=>`<button aria-pressed="${c===cat}" data-c="${c}">${c}</button>`).join("")}
+const card=x=>`<article class="pr">${x.o?'<div class="sale">-20%</div>':""}
+<div class="art" style="background:var(--t${x.t})">${x.e}</div><h3><a href="#p${x.id}">${x.n}</a></h3><p class="sp">${x.s}</p>
+<div class="row"><div class="price">${x.o?`<s>${fmt(x.o)}</s>`:""}${fmt(x.p)}</div><button class="add" data-id="${x.id}" aria-label="${x.n} сагсанд нэмэх">+</button></div></article>`;
 function grid(){
 const l=P.filter(x=>(cat==="Бүгд"||x.c===cat)&&x.n.toLowerCase().includes(term));
-$("grid").innerHTML=l.length?l.map(x=>`<article class="pr">${x.o?'<div class="sale">-20%</div>':""}
-<div class="art" style="background:var(--t${x.t})">${x.e}</div><h3>${x.n}</h3><p class="sp">${x.s}</p>
-<div class="row"><div class="price">${x.o?`<s>${fmt(x.o)}</s>`:""}${fmt(x.p)}</div><button class="add" data-id="${x.id}" aria-label="${x.n} сагсанд нэмэх">+</button></div></article>`).join(""):'<p class="empty">Хайлтад тохирох бараа олдсонгүй. Өөр үгээр хайж үзнэ үү.</p>'}
+$("grid").innerHTML=l.length?l.map(card).join(""):'<p class="empty">Хайлтад тохирох бараа олдсонгүй. Өөр үгээр хайж үзнэ үү.</p>'}
 function draw(){
 const ids=Object.keys(cart),n=ids.reduce((a,i)=>a+cart[i],0);
-$("cnt").textContent=n;
+$("cnt").textContent=n;$("cnt2").textContent=n;
 let sum=0;
 $("items").innerHTML=ids.length?ids.map(i=>{const x=P.find(p=>p.id==i);sum+=x.p*cart[i];
 return `<div class="it"><div class="em" style="background:var(--t${x.t})">${x.e}</div><div>${x.n}<br><b>${fmt(x.p)}</b></div>
@@ -171,18 +198,45 @@ $("total").textContent=fmt(sum);
 let tt;function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),1600)}
 document.addEventListener("click",e=>{
 const c=e.target.closest("[data-c]");if(c){cat=c.dataset.c;chips();grid();return}
-const a=e.target.closest(".add");if(a){const id=a.dataset.id;cart[id]=(cart[id]||0)+1;draw();toast(P.find(p=>p.id==id).n+" сагсанд нэмэгдлээ");return}
+const a=e.target.closest(".add,.addd");if(a){const id=a.dataset.id;cart[id]=(cart[id]||0)+1;draw();toast(P.find(p=>p.id==id).n+" сагсанд нэмэгдлээ");return}
 const q=e.target.closest(".q button");if(q){const id=q.dataset.id;cart[id]+=+q.dataset.d;if(cart[id]<1)delete cart[id];draw()}
 });
 $("q").addEventListener("input",e=>{term=e.target.value.trim().toLowerCase();grid()});
 $("openCart").onclick=()=>$("sheet").classList.add("open");
 $("bk").onclick=()=>$("sheet").classList.remove("open");
-document.addEventListener("keydown",e=>{if(e.key==="Escape")$("sheet").classList.remove("open")});
+document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;const sh=$("sheet");if(sh.classList.contains("open"))sh.classList.remove("open");else if($("detail").classList.contains("open"))$("back").click()});
+$("openCart2").onclick=()=>$("sheet").classList.add("open");
+$("back").onclick=()=>{history.pushState(null,"","#");route()};
+const D={
+1:{d:"Орчны чимээг дарж, ажлын өрөө, автобус, нислэгт тайван орчин бүрдүүлнэ. Зөөлөн чихэвчтэй тул удаан зүүхэд ядрахгүй.",k:[["Ажиллах хугацаа","40 цаг"],["Холболт","Bluetooth 5.3"],["Цэнэглэх","USB-C"],["Жин","250 гр"]]},
+2:{d:"Утасны аппаар өнгө, гэрлийн тод байдлыг удирдана. Цагийн хуваарь тохируулж өглөө аажмаар асуулгах боломжтой.",k:[["Өнгө","16 сая"],["Чадал","9 Вт"],["Холболт","Wi-Fi 2.4 ГГц"],["Бөгжний төрөл","E27"]]},
+3:{d:"Өрөөгөө кино театр болгоно. Автомат фокус, налуулалтыг өөрөө засдаг тул тохируулахад хялбар.",k:[["Нягтрал","4K"],["Дэлгэцийн хэмжээ","120 инч хүртэл"],["Гэрэлтэлт","900 люмен"],["Холболт","HDMI, Wi-Fi, Bluetooth"]]},
+4:{d:"Утасгүй тоглоомын хэт нь компьютер, утас, консол дээр ажиллана. Гар нь хуруунд эвтэйхэн тохирно.",k:[["Холболт","Bluetooth, USB"],["Батарей","30 цаг"],["Тохирох төхөөрөмж","PC, Android, iOS"],["Чичиргээ","Тийм"]]},
+5:{d:"Чимээгүй товчтой механик гар. Шөнө ажиллахад бусдад саад болохгүй, товчны гэрлийг өөрөө тохируулна.",k:[["Товчны төрөл","Чимээгүй механик"],["Гэрэл","RGB"],["Холболт","USB-C кабель"],["Хэмжээ","Бүтэн (104 товч)"]]},
+6:{d:"Утас, цаг, чихэвчээ нэг дор зэрэг цэнэглэнэ. Орны хажууд эсвэл ширээн дээр цэвэрхэн байрлана.",k:[["Төхөөрөмж","3 зэрэг"],["Чадал","15 Вт хүртэл"],["Холболт","USB-C"],["Хамгаалалт","Хэт халалт, хэт цэнэг"]]},
+7:{d:"Гар дээр барьж явахад хялбар, усны шүршилтээс айдаггүй чанга яригч. Гадаа, хотын гадуур явахад тохиромжтой.",k:[["Ажиллах хугацаа","12 цаг"],["Усны хамгаалалт","IP67"],["Холболт","Bluetooth 5.2"],["Жин","540 гр"]]},
+8:{d:"Зүрхний цохилт, алхам, нойрыг хянаж утсанд мэдэгдэл дамжуулна. Нэг цэнэгээр долоо хоног ажиллана.",k:[["Батарей","7 хоног"],["Мэдрэгч","Зүрх, SpO2, алхам"],["Усны хамгаалалт","5 ATM"],["Тохирох утас","Android, iOS"]]}};
+let lastY=0;
+function route(){
+const m=location.hash.match(/^#p(\d+)$/),el=$("detail");
+if(!m){el.classList.remove("open");document.body.style.overflow="";document.title="Сигнал — технологийн дэлгүүр";return}
+const x=P.find(r=>r.id==m[1]);if(!x){history.pushState(null,"","#");return route()}
+const d=D[x.id],rel=[...P.filter(r=>r.c===x.c&&r.id!==x.id),...P.filter(r=>r.c!==x.c&&r.id!==x.id)].slice(0,4);
+$("dbody").innerHTML=`<div class="dgrid"><div class="dart" style="background:var(--t${x.t})">${x.e}</div>
+<div><h1 class="dh">${x.n}</h1>
+<div class="dprice">${x.o?`<s>${fmt(x.o)}</s>`:""}<b>${fmt(x.p)}</b>${x.o?`<em>${fmt(x.o-x.p)} хэмнэнэ</em>`:""}</div>
+<p class="dd">${d.d}</p>
+<button class="addd" data-id="${x.id}">Сагсанд нэмэх</button>
+<dl class="spec">${d.k.map(([a,b])=>`<div><dt>${a}</dt><dd>${b}</dd></div>`).join("")}</dl></div></div>
+<h2>Төстэй бараа</h2><div class="grid">${rel.map(card).join("")}</div>`;
+el.classList.add("open");el.scrollTop=0;document.body.style.overflow="hidden";document.title=x.n+" — Сигнал";
+}
+addEventListener("hashchange",route);
 $("buy").onclick=()=>{if(!Object.keys(cart).length){toast("Эхлээд бараа нэмнэ үү");return}cart={};draw();$("sheet").classList.remove("open");toast("Захиалга хүлээн авлаа")};
 function tick(){const n=new Date(),e=new Date(n);e.setHours(24,0,0,0);let d=Math.floor((e-n)/1000);
 const p=v=>String(v).padStart(2,"0"),sm=t=>t.replace(/^\d+/,"");
 [["h",d/3600|0,"цаг"],["m",d%3600/60|0,"минут"],["s",d%60,"секунд"]].forEach(([i,v,l])=>$(i).innerHTML=p(v)+"<small>"+l+"</small>")}
-chips();grid();draw();tick();setInterval(tick,1000);
+chips();grid();draw();tick();setInterval(tick,1000);route();
 </script>
 </body>
 </html>
