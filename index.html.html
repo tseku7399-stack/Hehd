@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Сигнал — технологийн дэлгүүр</title>
+<title>PrimeCore — технологийн дэлгүүр</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700&family=Unbounded:wght@500;700&display=swap">
 <style>
 :root{--bg:#e8eeec;--card:#f7faf9;--ink:#0d2b2c;--mute:#52706f;--line:#c4d3d0;--acc:#5b2fe8;--onacc:#fff;--sun:#ffd23f;--t1:#d9e6ff;--t2:#ffe3d1;--t3:#d6f2df;--t4:#f0dcff;
@@ -164,7 +164,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 30px;color:var(--mute);fo
 </head>
 <body>
 <header><div class="wrap bar">
-<div class="logo"><i></i>Сигнал</div>
+<div class="logo"><i></i>PrimeCore</div>
 <span style="flex:1"></span>
 <button class="ibtn" id="sBtn" aria-label="Хайх" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
 <button class="ibtn" id="openCart" aria-label="Сагс нээх"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg><b id="cnt">0</b></button>
@@ -216,7 +216,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 30px;color:var(--mute);fo
 <div><b>1 жилийн баталгаа</b><span>Бүх барааг баталгаат хугацаанд нь засаж, солино.</span></div>
 </section>
 </main>
-<footer><div class="wrap">© 2026 Сигнал. Загварын жишээ сайт. Apple, Samsung, HyperX, Amazon, LG нь тус тусын эзэмшигчийн барааны тэмдэг.</div></footer>
+<footer><div class="wrap">© 2026 PrimeCore</div></footer>
 
 <div class="detail" id="detail" role="dialog" aria-modal="true" aria-label="Барааны дэлгэрэнгүй">
 <div class="dbar"><div class="wrap bar"><button class="back" id="back">‹ Буцах</button><span style="flex:1"></span><button class="ibtn" id="openCart2" aria-label="Сагс нээх"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg><b id="cnt2">0</b></button></div></div>
@@ -359,10 +359,10 @@ const D={
 let lastY=0;
 function route(){const m=location.hash.match(/^#p(\d+)$/);showP(m?+m[1]:0)}
 function showP(id){const el=$("detail");
-if(!id){el.classList.remove("open");document.body.style.overflow="";document.title="Сигнал — технологийн дэлгүүр";return}
+if(!id){el.classList.remove("open");document.body.style.overflow="";document.title="PrimeCore — технологийн дэлгүүр";return}
 const x=P.find(r=>r.id===id);if(!x)return showP(0);
 cur=x;sel={ci:0,si:0};paint();
-el.classList.add("open");el.scrollTop=0;document.body.style.overflow="hidden";document.title=x.n+" — Сигнал";
+el.classList.add("open");el.scrollTop=0;document.body.style.overflow="hidden";document.title=x.n+" — PrimeCore";
 }
 let sel={ci:0,si:0},cur=null;
 function paint(){const x=cur,d=D[x.id],rel=[...P.filter(r=>r.c===x.c&&r.id!==x.id),...P.filter(r=>r.c!==x.c&&r.id!==x.id)].slice(0,4);
