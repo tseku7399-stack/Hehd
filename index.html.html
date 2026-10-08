@@ -134,6 +134,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 30px;color:var(--mute);fo
 .sec{margin:16px 0 8px;font-weight:700}
 .hp{padding:12px 0;border-bottom:1px solid var(--line)}
 .hp span{display:block;color:var(--mute);font-size:14px}
+.ph{background:#fff!important}.ph img{width:100%;height:100%;object-fit:contain;border-radius:inherit;padding:6px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -216,7 +217,7 @@ const P=[
 {id:3,n:"MacBook Air",b:"Apple",r:"АНУ",e:"💻",c:"Компьютер",p:3790000,s:"Нимгэн, чимээгүй, өдөржин цэнэгтэй",t:1},
 {id:4,n:"AirPods Pro",b:"Apple",r:"АНУ",e:"🎧",c:"Аудио",p:480000,o:600000,s:"Шуугиан дарагч утасгүй чихэвч",t:3},
 {id:5,n:"Cloud тоглоомын чихэвч",b:"HyperX",r:"АНУ",e:"🎧",c:"Тоглоом",p:249000,s:"Салдаг микрофонтой, зөөлөн",t:2},
-{id:6,n:"QuadCast микрофон",b:"HyperX",r:"АНУ",e:"🎙️",c:"Тоглоом",p:320000,o:400000,s:"USB, стрийм болон подкаст",t:4},
+{id:6,n:"QuadCast микрофон",b:"HyperX",r:"АНУ",e:"🎙️",c:"Тоглоом",p:320000,o:400000,s:"USB, стрийм болон подкаст",t:4,img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzLxCnX8_OZYZOT1-4uz1U27WRaoPHEEp1BqYbqM37tQ&s=10"},
 {id:7,n:"Echo Dot",b:"Amazon",r:"АНУ",e:"🔊",c:"Ухаалаг гэр",p:169000,s:"Alexa дуут туслахтай яригч",t:3},
 {id:8,n:"Kindle",b:"Amazon",r:"АНУ",e:"📖",c:"Компьютер",p:399000,s:"Нүд ядраадаггүй цахим ном",t:2},
 {id:9,n:"Galaxy S",b:"Samsung",r:"Солонгос",e:"📱",c:"Гар утас",p:3200000,o:4000000,s:"AMOLED дэлгэц, хүчтэй камер",t:3},
@@ -224,12 +225,13 @@ const P=[
 {id:11,n:"Galaxy Watch",b:"Samsung",r:"Солонгос",e:"⌚",c:"Аксессуар",p:799000,s:"Зүрх, алхам, нойр хянана",t:1},
 {id:12,n:"UltraGear монитор 27\"",b:"LG",r:"Солонгос",e:"🖥️",c:"Компьютер",p:1190000,s:"144 Гц, тоглоомд тохиромжтой",t:2},
 {id:13,n:"OLED телевиз 55\"",b:"LG",r:"Солонгос",e:"📺",c:"Ухаалаг гэр",p:2400000,o:3000000,s:"Гүн хар өнгө, тод дүрс",t:4}];
+const pic=x=>x.img?`<img src="${x.img.replace(/&/g,"&amp;")}" alt="${x.n}" referrerpolicy="no-referrer" onerror="this.outerHTML='${x.e}'">`:x.e;
 const cats=["Бүгд",...new Set(P.map(x=>x.c))];
 let cat="Бүгд",org="Бүгд",term="",cart={};const origins=["Бүгд","АНУ","Солонгос"];
 const $=i=>document.getElementById(i),fmt=n=>n.toLocaleString("en-US")+"₮";
 function chips(){$("origin").innerHTML=origins.map(c=>`<button aria-pressed="${c===org}" data-o="${c}">${c==="Бүгд"?"Бүх улс":c}</button>`).join("");$("chips").innerHTML=cats.map(c=>`<button aria-pressed="${c===cat}" data-c="${c}">${c}</button>`).join("")}
 const card=x=>`<article class="pr" data-pid="${x.id}">${x.o?'<div class="sale">-20%</div>':""}
-<div class="art" style="background:var(--t${x.t})">${x.e}</div><p class="br"><b>${x.b}</b> ${x.r}</p><h3><a href="#p${x.id}">${x.n}</a></h3><p class="sp">${x.s}</p>
+<div class="art${x.img?" ph":""}" style="background:var(--t${x.t})">${pic(x)}</div><p class="br"><b>${x.b}</b> ${x.r}</p><h3><a href="#p${x.id}">${x.n}</a></h3><p class="sp">${x.s}</p>
 <div class="row"><div class="price">${x.o?`<s>${fmt(x.o)}</s>`:""}${fmt(x.p)}</div><button class="add" data-id="${x.id}" aria-label="${x.n} сагсанд нэмэх">+</button></div></article>`;
 function grid(){
 const l=P.filter(x=>(cat==="Бүгд"||x.c===cat)&&(org==="Бүгд"||x.r===org)&&(x.n+" "+x.b).toLowerCase().includes(term));
@@ -239,7 +241,7 @@ const ids=Object.keys(cart),n=ids.reduce((a,i)=>a+cart[i],0);
 $("cnt").textContent=n;$("cnt2").textContent=n;
 let sum=0;
 $("items").innerHTML=ids.length?ids.map(i=>{const x=P.find(p=>p.id==i);sum+=x.p*cart[i];
-return `<div class="it"><div class="em" style="background:var(--t${x.t})">${x.e}</div><div>${x.n}<br><b>${fmt(x.p)}</b></div>
+return `<div class="it"><div class="em${x.img?" ph":""}" style="background:var(--t${x.t})">${pic(x)}</div><div>${x.n}<br><b>${fmt(x.p)}</b></div>
 <div class="q"><button data-d="-1" data-id="${i}" aria-label="Хасах">−</button>${cart[i]}<button data-d="1" data-id="${i}" aria-label="Нэмэх">+</button></div></div>`}).join(""):'<p class="empty">Сагс хоосон байна. Дуртай барааныхаа + товчийг дарна уу.</p>';
 $("total").textContent=fmt(sum);
 }
@@ -303,7 +305,7 @@ function showP(id){const el=$("detail");
 if(!id){el.classList.remove("open");document.body.style.overflow="";document.title="Сигнал — технологийн дэлгүүр";return}
 const x=P.find(r=>r.id===id);if(!x)return showP(0);
 const d=D[x.id],rel=[...P.filter(r=>r.c===x.c&&r.id!==x.id),...P.filter(r=>r.c!==x.c&&r.id!==x.id)].slice(0,4);
-$("dbody").innerHTML=`<div class="dgrid"><div class="dart" style="background:var(--t${x.t})">${x.e}</div>
+$("dbody").innerHTML=`<div class="dgrid"><div class="dart${x.img?" ph":""}" style="background:var(--t${x.t})">${pic(x)}</div>
 <div><h1 class="dh">${x.n}</h1>
 <div class="dprice">${x.o?`<s>${fmt(x.o)}</s>`:""}<b>${fmt(x.p)}</b>${x.o?`<em>${fmt(x.o-x.p)} хэмнэнэ</em>`:""}</div>
 <p class="dd">${d.d}</p>
