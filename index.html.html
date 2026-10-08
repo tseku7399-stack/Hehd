@@ -141,6 +141,9 @@ footer{border-top:1px solid var(--line);padding:22px 0 30px;color:var(--mute);fo
 .sw button[aria-pressed=true]{border-color:var(--acc);box-shadow:inset 0 0 0 3px var(--bg),0 0 0 2px var(--acc)}
 .it small{color:var(--mute);font-size:12px}
 .dgrid .chips{padding-bottom:18px}
+.cl{display:flex;align-items:center;gap:14px;padding:14px;border:1.5px solid var(--line);border-radius:14px;background:var(--card);margin:12px 0 0;color:inherit;text-decoration:none;font-weight:500}
+.cl svg{width:28px;height:28px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cl span{display:block;color:var(--mute);font-size:13px;font-weight:400}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -157,6 +160,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 30px;color:var(--mute);fo
 <button data-panel="profile"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Профайл</button>
 <button data-panel="orders"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Миний худалдан авалт</button>
 <button data-panel="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>Тохиргоо</button>
+<button data-panel="contact"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>Холбоо барих</button>
 <button data-panel="help"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.7M12 17h.01"/></svg>Тусламж</button>
 </nav></div></div>
 </header>
@@ -280,12 +284,13 @@ const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}};
 let prof=ld("sg_profile",{name:"",phone:""}),orders=ld("sg_orders",[]),theme=ld("sg_theme","auto");
 function applyTheme(t){const r=document.documentElement;if(t==="auto")r.removeAttribute("data-theme");else r.setAttribute("data-theme",t)}
 applyTheme(theme);
-const TT={profile:"Профайл",orders:"Миний худалдан авалт",settings:"Тохиргоо",help:"Тусламж"};
+const TT={profile:"Профайл",orders:"Миний худалдан авалт",settings:"Тохиргоо",help:"Тусламж",contact:"Холбоо барих"};
 function openPanel(k){
 $("ptitle").textContent=TT[k];let h="";
 if(k==="profile")h=`<div class="ava">${(prof.name.trim()[0]||"?").toUpperCase()}</div><label class="fld">Нэр<input id="pname" value="${prof.name.replace(/"/g,"&quot;")}" autocomplete="name"></label><label class="fld">Утасны дугаар<input id="pphone" type="tel" value="${prof.phone.replace(/"/g,"&quot;")}" autocomplete="tel"></label><button class="pbtn" data-act="save">Хадгалах</button>`;
 if(k==="orders")h=orders.length?orders.map(o=>`<div class="ord"><div><span>Захиалга #${o.id}</span><span>${o.date}</span></div><p>${o.items.map(i=>`${i.b} ${i.n} ×${i.q}`).join(", ")}</p><div><span>Нийт</span><b>${fmt(o.total)}</b></div></div>`).join(""):'<p class="empty">Та одоогоор захиалга хийгээгүй байна. Сагсандаа бараа нэмж захиална уу.</p>';
 if(k==="settings")h=`<p class="sec">Өнгөний горим</p><div class="chips" role="group" aria-label="Өнгөний горим">${[["auto","Автомат"],["light","Цайвар"],["dark","Бараан"]].map(([v,l])=>`<button data-th="${v}" aria-pressed="${v===theme}">${l}</button>`).join("")}</div><p class="sec">Түүх</p><button class="pbtn" data-act="clear">Захиалгын түүх арилгах</button>`;
+if(k==="contact")h=`<a class="cl" href="https://www.facebook.com/share/1HtsecB7yB/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8z"/></svg><div>Facebook<span>Манай хуудсаар зочлоорой</span></div></a><a class="cl" href="https://www.instagram.com/primecore.mn?stkn=MW5mYjgyNW14MTdleQ==" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg><div>Instagram<span>@primecore.mn</span></div></a>`;
 if(k==="help")h='<div class="hp">Утас<span>7700-0000, Даваа–Баасан 10:00–19:00</span></div><div class="hp">И-мэйл<span>help@signal.example</span></div><div class="hp">Буцаалт<span>Бараагаа хүлээн авснаас хойш 14 хоногт буцаана.</span></div>';
 $("pbody").innerHTML=h;$("panel").classList.add("open");
 }
