@@ -127,6 +127,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 30px;color:var(--mute);fo
 .fld input{display:block;width:100%;height:46px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:0 14px;font:inherit;font-size:16px;margin:6px 0 14px}
 .fld input:focus{outline:0;border-color:var(--acc)}
 .sheet.full .box{overflow-x:hidden;overflow-y:auto}
+.lnk{display:block;color:var(--acc);font-weight:500;font-size:14px;padding:6px 0;margin:-6px 0 12px}
 .ava{width:72px;height:72px;border-radius:50%;background:var(--acc);color:var(--onacc);display:grid;place-items:center;font:700 28px Unbounded,sans-serif;margin:14px 0 18px}
 .pbtn{height:48px;padding:0 24px;border-radius:12px;background:var(--acc);color:var(--onacc);font-weight:700}
 .ord{padding:14px 0;border-bottom:1px solid var(--line);font-size:14px}
@@ -276,7 +277,7 @@ document.addEventListener("click",e=>{
 if(!e.target.closest("header")){menuSet(false);searchSet(false)}
 const mp=e.target.closest("[data-panel]");if(mp){menuSet(false);openPanel(mp.dataset.panel);return}
 const th=e.target.closest("[data-th]");if(th){theme=th.dataset.th;sv("sg_theme",theme);applyTheme(theme);openPanel("settings");return}
-const ac=e.target.closest("[data-act]");if(ac){const t=ac.dataset.act;if(t==="save"){prof={name:$("pname").value.trim(),phone:$("pphone").value.trim()};sv("sg_profile",prof);if(sess&&prof.name){sess.name=prof.name;sv("sg_sess",sess);navUser()}toast("Профайл хадгалагдлаа");openPanel("profile")}else if(t==="auth")doAuth();else if(t==="logout"){sess=null;sv("sg_sess",sess);navUser();closePanel();toast("Та гарлаа")}else{orders=[];sv("sg_orders",orders);toast("Түүх арилгагдлаа")}return}
+const ac=e.target.closest("[data-act]");if(ac){const t=ac.dataset.act;if(t==="save"){prof={name:$("pname").value.trim(),phone:$("pphone").value.trim()};sv("sg_profile",prof);if(sess&&prof.name){sess.name=prof.name;sv("sg_sess",sess);navUser()}toast("Профайл хадгалагдлаа");openPanel("profile")}else if(t==="auth")doAuth();else if(t==="reset")doReset();else if(t==="logout"){sess=null;sv("sg_sess",sess);navUser();closePanel();toast("Та гарлаа")}else{orders=[];sv("sg_orders",orders);toast("Түүх арилгагдлаа")}return}
 const tb=e.target.closest("[data-tab]");if(tb){authTab=tb.dataset.tab;openPanel("auth");return}
 const pc=e.target.closest(".pr");if(pc&&!e.target.closest(".add")){e.preventDefault();const id=+pc.dataset.pid;try{history.pushState(null,"","#p"+id)}catch(_){}showP(id);return}
 const oc=e.target.closest("[data-co]");if(oc){sel.ci=+oc.dataset.co;paint();return}
@@ -305,9 +306,9 @@ const TT={profile:"Профайл",orders:"Миний худалдан авал�
 function openPanel(k){
 if(k==="profile"&&!sess)k="auth";
 $("panel").classList.toggle("full",k==="auth"||k==="profile");
-$("ptitle").textContent=k==="auth"?(authTab==="login"?"Нэвтрэх":"Бүртгүүлэх"):TT[k];let h="";
+$("ptitle").textContent=k==="auth"?(authTab==="login"?"Нэвтрэх":authTab==="forgot"?"Нууц үг сэргээх":"Бүртгүүлэх"):TT[k];let h="";
 if(k==="profile")h=`<div class="ava">${(prof.name.trim()[0]||"?").toUpperCase()}</div><p class="acc">${sess.id}</p><label class="fld">Нэр<input id="pname" value="${prof.name.replace(/"/g,"&quot;")}" autocomplete="name"></label><label class="fld">Утасны дугаар<input id="pphone" type="tel" value="${prof.phone.replace(/"/g,"&quot;")}" autocomplete="tel"></label><button class="pbtn" data-act="save">Хадгалах</button> <button class="pbtn ghost" data-act="logout">Гарах</button>`;
-if(k==="auth"){const r=authTab==="register";h=`<p class="sub">${r?"Шинээр бүртгүүлж захиалгаа нэг дор хянаарай.":"Нэвтэрч захиалгаа хянаж, мэдээллээ хадгалаарай."}</p><div class="chips" role="group" aria-label="Нэвтрэх эсвэл бүртгүүлэх"><button data-tab="login" aria-pressed="${!r}">Нэвтрэх</button><button data-tab="register" aria-pressed="${r}">Бүртгүүлэх</button></div>${r?'<label class="fld">Нэр<input id="aname" autocomplete="name"></label>':""}<label class="fld">И-мэйл эсвэл утасны дугаар<input id="aid" autocomplete="username"></label><label class="fld">Нууц үг<input id="apw" type="password" autocomplete="${r?"new-password":"current-password"}"></label><p class="err" id="aerr" role="alert"></p><button class="pbtn" data-act="auth">${r?"Бүртгүүлэх":"Нэвтрэх"}</button>`}
+if(k==="auth"&&authTab==="forgot"){h=`<p class="sub">Бүртгүүлсэн и-мэйл эсвэл утасны дугаар, бүртгүүлэхдээ оруулсан нэрээ бичээд шинэ нууц үг тохируулна уу.</p><label class="fld">И-мэйл эсвэл утасны дугаар<input id="rid" autocomplete="username"></label><label class="fld">Бүртгүүлэхдээ оруулсан нэр<input id="rname" autocomplete="name"></label><label class="fld">Шинэ нууц үг<input id="rpw" type="password" autocomplete="new-password"></label><p class="err" id="aerr" role="alert"></p><button class="pbtn" data-act="reset">Нууц үг солих</button><button class="lnk" data-tab="login" style="margin-top:14px">← Нэвтрэх рүү буцах</button>`}else if(k==="auth"){const r=authTab==="register";h=`<p class="sub">${r?"Шинээр бүртгүүлж захиалгаа нэг дор хянаарай.":"Нэвтэрч захиалгаа хянаж, мэдээллээ хадгалаарай."}</p><div class="chips" role="group" aria-label="Нэвтрэх эсвэл бүртгүүлэх"><button data-tab="login" aria-pressed="${!r}">Нэвтрэх</button><button data-tab="register" aria-pressed="${r}">Бүртгүүлэх</button></div>${r?'<label class="fld">Нэр<input id="aname" autocomplete="name"></label>':""}<label class="fld">И-мэйл эсвэл утасны дугаар<input id="aid" autocomplete="username"></label><label class="fld">Нууц үг<input id="apw" type="password" autocomplete="${r?"new-password":"current-password"}"></label>${r?"":'<button class="lnk" data-tab="forgot">Нууц үгээ мартсан?</button>'}<p class="err" id="aerr" role="alert"></p><button class="pbtn" data-act="auth">${r?"Бүртгүүлэх":"Нэвтрэх"}</button>`}
 if(k==="orders")h=orders.length?orders.map(o=>`<div class="ord"><div><span>Захиалга #${o.id}</span><span>${o.date}</span></div><p>${o.items.map(i=>`${i.b} ${i.n} ×${i.q}`).join(", ")}</p><div><span>Нийт</span><b>${fmt(o.total)}</b></div></div>`).join(""):'<p class="empty">Та одоогоор захиалга хийгээгүй байна. Сагсандаа бараа нэмж захиална уу.</p>';
 if(k==="settings")h=`<p class="sec">Өнгөний горим</p><div class="chips" role="group" aria-label="Өнгөний горим">${[["auto","Автомат"],["light","Цайвар"],["dark","Бараан"]].map(([v,l])=>`<button data-th="${v}" aria-pressed="${v===theme}">${l}</button>`).join("")}</div><p class="sec">Түүх</p><button class="pbtn" data-act="clear">Захиалгын түүх арилгах</button>`;
 if(k==="contact")h=`<a class="cl" href="https://www.facebook.com/share/1HtsecB7yB/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8z"/></svg><div>Facebook<span>Манай хуудсаар зочлоорой</span></div></a><a class="cl" href="https://www.instagram.com/primecore.mn?stkn=MW5mYjgyNW14MTdleQ==" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg><div>Instagram<span>@primecore.mn</span></div></a>`;
@@ -317,7 +318,7 @@ $("pbody").innerHTML=h;$("panel").classList.add("open");
 const closePanel=()=>$("panel").classList.remove("open");
 $("pclose").onclick=closePanel;$("pbk").onclick=closePanel;
 $("uBtn").onclick=()=>{menuSet(false);searchSet(false);if(!sess)authTab="login";openPanel("profile")};
-$("pbody").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.tagName==="INPUT"){const b=$("pbody").querySelector('[data-act="auth"],[data-act="save"]');if(b)b.click()}});
+$("pbody").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.tagName==="INPUT"){const b=$("pbody").querySelector('[data-act="auth"],[data-act="reset"],[data-act="save"]');if(b)b.click()}});
 async function hash(t){try{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("sg:"+t));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}catch(_){let h=5381;for(const c of "sg:"+t)h=(h*33^c.charCodeAt(0))>>>0;return"d"+h}}
 async function doAuth(){
 const id=$("aid").value.trim().toLowerCase(),pw=$("apw").value,err=$("aerr"),reg=authTab==="register",users=ld("sg_users",[]);
@@ -330,6 +331,13 @@ else{u=users.find(x=>x.id===id);if(!u||u.h!==await hash(pw)){err.textContent="И
 sess={id:u.id,name:u.name};sv("sg_sess",sess);
 prof={name:u.name,phone:/^[\d+\s-]{6,}$/.test(u.id)?u.id:prof.phone};sv("sg_profile",prof);
 navUser();toast("Тавтай морил, "+u.name);openPanel("profile")}
+async function doReset(){
+const id=$("rid").value.trim().toLowerCase(),nm=$("rname").value.trim().toLowerCase(),pw=$("rpw").value,err=$("aerr"),users=ld("sg_users",[]);
+if(!id||!nm||!pw){err.textContent="Бүх талбарыг бөглөнө үү.";return}
+if(pw.length<6){err.textContent="Нууц үг хамгийн багадаа 6 тэмдэгттэй байна.";return}
+const u=users.find(x=>x.id===id);
+if(!u||u.name.trim().toLowerCase()!==nm){err.textContent="Бүртгэл олдсонгүй эсвэл нэр таарахгүй байна.";return}
+u.h=await hash(pw);sv("sg_users",users);authTab="login";openPanel("auth");toast("Нууц үг шинэчлэгдлээ. Нэвтэрнэ үү.")}
 $("bk").onclick=()=>$("sheet").classList.remove("open");
 document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if($("panel").classList.contains("open")){closePanel();return}if(!menu.hidden||!sbox.hidden){menuSet(false);searchSet(false);return}const sh=$("sheet");if(sh.classList.contains("open"))sh.classList.remove("open");else if($("detail").classList.contains("open"))$("back").click()});
 $("openCart2").onclick=()=>$("sheet").classList.add("open");
